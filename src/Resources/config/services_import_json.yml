@@ -1,17 +1,5 @@
 services:
     # JSON-Importers
-    sylius.importer.countries.json:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
-        arguments:
-            - "@sylius.manager.country"
-            - "@sylius.processor.countries"
-            - "@sylius.importer.result"
-            - "%sylius.importer.batch_size%"
-            - "%sylius.importer.fail_on_incomplete%"
-            - "%sylius.importer.stop_on_failure%"
-        tags:
-            - { name: sylius.importer, type: country, format: json }
-
     sylius.importer.customer_group.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:

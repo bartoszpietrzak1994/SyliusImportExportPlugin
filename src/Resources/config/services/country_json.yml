@@ -1,0 +1,46 @@
+parameters:
+    sylius.countries_fields: ["Code", "Enabled"]
+
+services:
+    sylius.exporter.countries.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.countries"
+            - "%sylius.countries_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.country, format: json }
+
+    sylius.exporter.plugin.resource.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.country"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.countries"]
+            - "%sylius.countries_fields%"
+
+    sylius.processor.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.country"
+            - "@sylius.repository.country"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.countries_fields%"
+
+    sylius.importer.countries.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.country"
+            - "@sylius.processor.countries"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: country, format: json }
