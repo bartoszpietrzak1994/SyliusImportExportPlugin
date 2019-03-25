@@ -50,7 +50,8 @@
         "symfony/dotenv": "^4.2",
         "symfony/intl": "^4.2",
         "symfony/web-profiler-bundle": "^4.2",
-        "symfony/web-server-bundle": "^4.2"
+        "symfony/web-server-bundle": "^4.2",
+        "mikey179/vfsStream": "^1.6"
     },
     "prefer-stable": true,
     "minimum-stability": "alpha",
