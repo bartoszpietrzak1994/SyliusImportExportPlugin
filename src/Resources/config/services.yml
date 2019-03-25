@@ -56,6 +56,13 @@ services:
         tags:
             - { name: sylius.exporter_transformer }
 
+    sylius.exporters_transformer_taxon_to_taxon_id_format:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\Taxon\TaxonToTaxonIdFormatHandler
+        arguments:
+            - ['Parent']
+        tags:
+            - { name: sylius.exporter_transformer }
+
     # Commands
     sylius.command.import_data:
         class: FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand
@@ -108,6 +115,13 @@ services:
             - "@sylius.service.address_concatenation"
             - "@sylius.exporter.orm.hydrator.orders"
 
+    sylius.exporter.plugin.resource.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\TaxonResourcePlugin
+        arguments:
+            - "@sylius.repository.taxon"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
     sylius.exporter.plugin.resource.tax_categories:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
         arguments:
@@ -119,13 +133,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
         arguments:
             - "@sylius.repository.customer"
-            - "@property_accessor"
-            - "@doctrine.orm.entity_manager"
-
-    sylius.exporter.plugin.resource.taxons:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
-        arguments:
-            - "@sylius.repository.taxon"
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
 
@@ -164,7 +171,7 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.taxons"]
-            - ["Code", "Root", "Parent", "Children", "Left", "Right", "Level", "Position"]
+            - ["Id", "Code" , "Parent", "Left", "Right", "Level", "Position"]
 
     # Service for gathering Information about Import
     sylius.importer.result:
