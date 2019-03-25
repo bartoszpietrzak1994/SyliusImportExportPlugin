@@ -26,12 +26,3 @@ services:
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.customer, format: json }
-
-    sylius.exporter.taxons.json:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
-        arguments:
-            - "@sylius.exporter.pluginpool.taxons"
-            - ["Code", "Root", "Parent", "Children", "Left", "Right", "Level", "Position"]
-            - "@sylius.exporters_transformer_pool"
-        tags:
-            - { name: sylius.exporter, type: sylius.taxon, format: json }

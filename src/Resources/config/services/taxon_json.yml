@@ -1,0 +1,25 @@
+parameters:
+    sylius.exporter.taxons_fields: ["Code", "Parent", "Translations", "Position"]
+
+services:
+    sylius.exporter.plugin.resource.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\TaxonResourcePlugin
+        arguments:
+            - "@sylius.repository.taxon"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.taxons"]
+            - "%sylius.exporter.taxons_fields%"
+
+    sylius.exporter.taxons.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.taxons"
+            - "%sylius.exporter.taxons_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.taxon, format: json }

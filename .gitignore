@@ -1,6 +1,8 @@
 /bin/
 !/bin/.gitkeep
 
+/web/media/image
+
 /vendor/
 /node_modules/
 
