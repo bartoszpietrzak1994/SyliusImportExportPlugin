@@ -47,6 +47,7 @@ final class TaxonProcessor implements ResourceProcessorInterface
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
+        /** @var TaxonInterface $taxon */
         $taxon = $this->getTaxon($data['Code']);
         $taxon->setParent($this->getTaxon($data['Parent']));
         $taxon->setPosition($data['Position']);
@@ -71,7 +72,7 @@ final class TaxonProcessor implements ResourceProcessorInterface
         $taxon = $this->findTaxon($code);
 
         if ($taxon === null) {
-            /** @var TaxonInterface $paymentMethod */
+            /** @var TaxonInterface $taxon */
             $taxon = $this->factory->createNew();
             $taxon->setCode($code);
 
