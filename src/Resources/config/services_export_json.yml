@@ -17,3 +17,12 @@ services:
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.customer, format: json }
+
+    sylius.exporter.tax_categories.csv:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.tax_categories"
+            - ["Id", "Code" ,"Name", "Description"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.tax_category, format: json }
