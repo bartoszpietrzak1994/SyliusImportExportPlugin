@@ -39,7 +39,7 @@ services:
             - "@sylius.manager.taxon"
             - "@sylius.processor.taxons"
             - "@sylius.importer.result"
-            - 50
+            - "%sylius.importer.batch_size%"
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
