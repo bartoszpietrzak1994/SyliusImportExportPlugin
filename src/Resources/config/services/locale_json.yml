@@ -1,0 +1,46 @@
+parameters:
+    sylius.locales_fields: ["Code"]
+
+services:
+    sylius.exporter.locales.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.locales"
+            - "%sylius.locales_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.locale, format: json }
+
+    sylius.exporter.plugin.resource.locales:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.locale"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.locales:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.locales"]
+            - "%sylius.locales_fields%"
+
+    sylius.processor.locales:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.locale"
+            - "@sylius.repository.locale"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.locales_fields%"
+
+    sylius.importer.locales.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.locale"
+            - "@sylius.processor.locales"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: locale, format: json }
