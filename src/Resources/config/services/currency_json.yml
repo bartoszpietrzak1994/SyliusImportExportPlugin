@@ -1,0 +1,46 @@
+parameters:
+    sylius.currencies_fields: ["Code"]
+
+services:
+    sylius.exporter.currencies.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.currencies"
+            - "%sylius.currencies_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.currency, format: json }
+
+    sylius.exporter.plugin.resource.currencies:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.currency"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.currencies:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.currencies"]
+            - "%sylius.currencies_fields%"
+
+    sylius.processor.currencies:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.currency"
+            - "@sylius.repository.currency"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.currencies_fields%"
+
+    sylius.importer.currencies.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.currency"
+            - "@sylius.processor.currencies"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: currency, format: json }
