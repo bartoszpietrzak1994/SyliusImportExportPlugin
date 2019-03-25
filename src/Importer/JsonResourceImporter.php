@@ -44,6 +44,8 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
             }
         }
 
+        $this->objectManager->flush();
+
         $this->result->stop();
 
         return $this->result;

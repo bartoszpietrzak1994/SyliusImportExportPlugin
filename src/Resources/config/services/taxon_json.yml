@@ -1,5 +1,5 @@
 parameters:
-    sylius.exporter.taxons_fields: ["Code", "Parent", "Translations", "Position"]
+    sylius.taxons_fields: ["Code", "Parent", "Translations", "Position"]
 
 services:
     sylius.exporter.plugin.resource.taxons:
@@ -13,13 +13,34 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.taxons"]
-            - "%sylius.exporter.taxons_fields%"
+            - "%sylius.taxons_fields%"
 
     sylius.exporter.taxons.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
             - "@sylius.exporter.pluginpool.taxons"
-            - "%sylius.exporter.taxons_fields%"
+            - "%sylius.taxons_fields%"
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.taxon, format: json }
+
+    sylius.processor.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\TaxonProcessor
+        arguments:
+            - "@sylius.factory.taxon"
+            - "@sylius.repository.taxon"
+            - "@sylius.manager.taxon"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.taxons_fields%"
+
+    sylius.importer.taxons.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.taxon"
+            - "@sylius.processor.taxons"
+            - "@sylius.importer.result"
+            - 50
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: taxon, format: json }
