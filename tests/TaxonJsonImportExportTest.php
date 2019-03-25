@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin;
 
-final class JsonTaxonImportExportTest extends AbstractJsonImportExportTest
+final class TaxonJsonImportExportTest extends AbstractJsonImportExportTest
 {
     protected function provideName(): string
     {
