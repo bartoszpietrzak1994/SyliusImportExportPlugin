@@ -122,6 +122,13 @@ services:
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
 
+    sylius.exporter.plugin.resource.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.taxon"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
     # ORM hydrators to improve performance
     sylius.exporter.orm.hydrator.orders:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator\OrderHydrator
@@ -152,6 +159,12 @@ services:
         arguments:
             - ["@sylius.exporter.plugin.resource.customers"]
             - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+
+    sylius.exporter.pluginpool.taxons:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.taxons"]
+            - ["Code", "Root", "Parent", "Children", "Left", "Right", "Level", "Position"]
 
     # Service for gathering Information about Import
     sylius.importer.result:
