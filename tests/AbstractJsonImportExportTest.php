@@ -58,6 +58,19 @@ abstract class AbstractJsonImportExportTest extends KernelTestCase
         );
     }
 
+    final protected function loadJsonFixtures(string $name, string $content): void
+    {
+        $file = sprintf('%s/%s', $this->filesystemPath, 'load.json');
+
+        file_put_contents($file, $content);
+
+        $importerName = ImporterRegistry::buildServiceName($name, 'json');
+
+        /** @var ImporterInterface $importer */
+        $importer = static::$container->get('sylius.importers_registry')->get($importerName);
+        $importer->import($file);
+    }
+
     abstract protected function provideName(): string;
     abstract protected function provideJsonData(): string;
 }

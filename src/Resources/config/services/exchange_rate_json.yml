@@ -1,0 +1,47 @@
+parameters:
+    sylius.exchange_rates_fields: ["Source_currency", "Target_currency", "Ratio"]
+
+services:
+    sylius.exporter.exchange_rates.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.exchange_rates"
+            - "%sylius.exchange_rates_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.exchange_rate, format: json }
+
+    sylius.exporter.plugin.resource.exchange_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ExchangeRateResourcePlugin
+        arguments:
+            - "@sylius.repository.exchange_rate"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.exchange_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.exchange_rates"]
+            - "%sylius.exchange_rates_fields%"
+
+    sylius.processor.exchange_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ExchangeRateProcessor
+        arguments:
+            - "@sylius.factory.exchange_rate"
+            - "@sylius.repository.exchange_rate"
+            - "@sylius.manager.exchange_rate"
+            - "@sylius.repository.currency"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.exchange_rates_fields%"
+
+    sylius.importer.exchange_rates.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.exchange_rate"
+            - "@sylius.processor.exchange_rates"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: exchange_rate, format: json }
