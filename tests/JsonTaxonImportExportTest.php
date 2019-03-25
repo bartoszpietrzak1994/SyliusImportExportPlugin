@@ -22,7 +22,7 @@ final class JsonTaxonImportExportTest extends AbstractJsonImportExportTest
             "en_US": {
                 "Name": "Category",
                 "Slug": "category",
-                "Description": "In quasi sed hic mollitia consequuntur. Eius itaque non blanditiis debitis. Autem incidunt sed sint quis doloribus. Vitae itaque quos alias repellat nam sequi reiciendis voluptatum."
+                "Description": "In quasi sed hic mollitia consequuntur."
             }
         },
         "Position": 0
@@ -34,12 +34,12 @@ final class JsonTaxonImportExportTest extends AbstractJsonImportExportTest
             "en_US": {
                 "Name": "Mugs",
                 "Slug": "mugs",
-                "Description": "Natus deleniti vel fugit aliquam distinctio consectetur. Eius dignissimos quae eos consectetur dolorem placeat laudantium. Quae qui et qui."
+                "Description": "Natus deleniti vel fugit aliquam distinctio consectetur."
             },
             "fr_FR": {
                 "Name": "Tasses",
                 "Slug": "tasses",
-                "Description": "Quis aspernatur cum eum ad qui porro. Totam voluptatem sint cupiditate deleniti qui amet voluptatem. Est id dignissimos occaecati dignissimos fugit veritatis officiis."
+                "Description": "Quis aspernatur cum eum ad qui porro."
             }
         },
         "Position": 0
@@ -51,7 +51,7 @@ final class JsonTaxonImportExportTest extends AbstractJsonImportExportTest
             "en_US": {
                 "Name": "T-Shirts",
                 "Slug": "t-shirts",
-                "Description": "Aut praesentium quaerat est minima. Sed magni error accusantium consequuntur. Sunt quibusdam sed quam et quasi quasi. Esse occaecati atque ut ut vel repudiandae."
+                "Description": "Aut praesentium quaerat est minima."
             }
         },
         "Position": 1
@@ -63,12 +63,12 @@ final class JsonTaxonImportExportTest extends AbstractJsonImportExportTest
             "en_US": {
                 "Name": "Men",
                 "Slug": "t-shirts\/men",
-                "Description": "Alias voluptas non ipsam quia. In nam voluptatibus aliquam debitis aut. Et earum voluptas fuga inventore. Dolorem illo aut eum autem inventore eius."
+                "Description": "Alias voluptas non ipsam quia."
             },
             "fr_FR": {
                 "Name": "Hommes",
                 "Slug": "t-shirts\/hommes",
-                "Description": "In unde inventore aliquid autem dolorum labore. Dolor quas at aut aut. Vero aut ratione ullam. Quia sunt voluptatem veritatis aut amet iure exercitationem."
+                "Description": "In unde inventore aliquid autem dolorum labore."
             }
         },
         "Position": 0
