@@ -73,6 +73,7 @@ final class ExchangeRateProcessor implements ResourceProcessorInterface
             throw new ItemIncompleteException();
         }
 
+        /** @var ExchangeRateInterface|null $exchangeRate */
         $exchangeRate = $this->repository->findOneBy(['sourceCurrency' => $sourceCurrency, 'targetCurrency' => $targetCurrency]);
 
         if ($exchangeRate === null) {
@@ -86,5 +87,4 @@ final class ExchangeRateProcessor implements ResourceProcessorInterface
 
         return $exchangeRate;
     }
-
 }

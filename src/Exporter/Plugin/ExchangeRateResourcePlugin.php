@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Currency\Model\ExchangeRateInterface;
+use Webmozart\Assert\Assert;
 
 final class ExchangeRateResourcePlugin extends ResourcePlugin
 {
@@ -17,8 +19,17 @@ final class ExchangeRateResourcePlugin extends ResourcePlugin
 
         /** @var ExchangeRateInterface $resource */
         foreach ($this->resources as $resource) {
-            $this->addDataForResource($resource, 'Source_currency', $resource->getSourceCurrency()->getCode());
-            $this->addDataForResource($resource, 'Target_currency', $resource->getTargetCurrency()->getCode());
+            /** @var CurrencyInterface $sourceCurrency */
+            $sourceCurrency = $resource->getSourceCurrency();
+            Assert::notNull($sourceCurrency);
+
+            $this->addDataForResource($resource, 'Source_currency', $sourceCurrency->getCode());
+
+            /** @var CurrencyInterface $targetCurrency */
+            $targetCurrency = $resource->getTargetCurrency();
+            Assert::notNull($targetCurrency);
+
+            $this->addDataForResource($resource, 'Target_currency', $targetCurrency->getCode());
         }
     }
 }
