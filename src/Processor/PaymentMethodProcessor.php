@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
-use Payum\Core\Model\GatewayConfigInterface;
-use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Sylius\Bundle\PayumBundle\Model\GatewayConfigInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class PaymentMethodProcessor implements ResourceProcessorInterface
 {
-    /** @var PaymentMethodFactoryInterface */
-    private $resourceFactory;
+    /** @var FactoryInterface */
+    private $factory;
 
     /** @var RepositoryInterface */
-    private $resourceRepository;
+    private $repository;
+
+    /** @var ObjectManager */
+    private $manager;
+
+    /** @var FactoryInterface */
+    private $gatewayConfigFactory;
 
     /** @var MetadataValidatorInterface */
     private $metadataValidator;
@@ -25,16 +31,20 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     private $headerKeys;
 
     /**
-     * @param string[]                         $headerKeys
+     * @param string[] $headerKeys
      */
     public function __construct(
-        PaymentMethodFactoryInterface $factory,
+        FactoryInterface $factory,
         RepositoryInterface $repository,
+        ObjectManager $manager,
+        FactoryInterface $gatewayFactory,
         MetadataValidatorInterface $metadataValidator,
         array $headerKeys
     ) {
-        $this->resourceFactory = $factory;
-        $this->resourceRepository = $repository;
+        $this->factory = $factory;
+        $this->repository = $repository;
+        $this->manager = $manager;
+        $this->gatewayConfigFactory = $gatewayFactory;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
     }
@@ -43,42 +53,34 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
-        $paymentMethod = $this->getPaymentMethod($data['Code'], $data['Gateway']);
-        $gatewayConfig = $this->getGatewayConfig($data, $paymentMethod);
-        $gatewayConfig->setGatewayName($data['Name']);
+        /** @var PaymentMethodInterface $paymentMethod */
+        $paymentMethod = $this->getPaymentMethod($data['Code']);
+        $paymentMethod->setEnvironment($data['Environment']);
+        $paymentMethod->setEnabled($data['Enabled']);
+        $paymentMethod->setPosition($data['Position']);
+
+        /** @var GatewayConfigInterface $gatewayConfig */
+        $gatewayConfig = $this->gatewayConfigFactory->createNew();
+        $gatewayConfig->setGatewayName($data['Gateway_config']['Gateway_name']);
+        $gatewayConfig->setFactoryName($data['Gateway_config']['Factory_name']);
+        $gatewayConfig->setConfig($data['Gateway_config']['Config']);
 
         $paymentMethod->setGatewayConfig($gatewayConfig);
-        $paymentMethod->setName($data['Name']);
-        $paymentMethod->setInstructions($data['Instructions']);
-
-        $this->resourceRepository->add($paymentMethod);
     }
 
-    private function getPaymentMethod(string $code, string $gateway): PaymentMethodInterface
+    private function getPaymentMethod(string $code): PaymentMethodInterface
     {
         /** @var PaymentMethodInterface|null $paymentMethod */
-        $paymentMethod = $this->resourceRepository->findOneBy(['code' => $code]);
+        $paymentMethod = $this->repository->findOneBy(['code' => $code]);
 
         if ($paymentMethod === null) {
             /** @var PaymentMethodInterface $paymentMethod */
-            $paymentMethod = $this->resourceFactory->createWithGateway($gateway);
+            $paymentMethod = $this->factory->createNew();
             $paymentMethod->setCode($code);
+
+            $this->manager->persist($paymentMethod);
         }
 
         return $paymentMethod;
-    }
-
-    /**
-     * @param mixed[] $data
-     */
-    private function getGatewayConfig(array $data, PaymentMethodInterface $paymentMethod): GatewayConfigInterface
-    {
-        $gatewayConfig = $paymentMethod->getGatewayConfig();
-
-        if (null === $gatewayConfig) {
-            throw new ImporterException('Gateway does not exist:' . $data['Gateway']);
-        }
-
-        return $gatewayConfig;
     }
 }
