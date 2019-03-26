@@ -74,11 +74,6 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         $shippingMethod->setPosition($data['Position']);
         $shippingMethod->setCategoryRequirement($data['CategoryRequirement']);
 
-        /** @var ChannelInterface $channel */
-        foreach ($data['Channels'] as $channelCode) {
-            $shippingMethod->addChannel($this->findChannel($channelCode));
-        }
-
         foreach ($data['Translations'] as $locale => $translation) {
             $shippingMethod->setCurrentLocale($locale);
             $shippingMethod->setFallbackLocale($locale);
