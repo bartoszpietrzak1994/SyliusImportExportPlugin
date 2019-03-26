@@ -33,13 +33,13 @@ LOL
         return <<<LOL
 [
     {
-        "Source_currency": "USD",
-        "Target_currency": "PLN",
+        "SourceCurrency": "USD",
+        "TargetCurrency": "PLN",
         "Ratio": 3.0
     },
     {
-        "Source_currency": "PLN",
-        "Target_currency": "USD",
+        "SourceCurrency": "PLN",
+        "TargetCurrency": "USD",
         "Ratio": 1.5
     }
 ]

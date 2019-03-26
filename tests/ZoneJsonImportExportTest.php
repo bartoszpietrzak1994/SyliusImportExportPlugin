@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin;
 
-final class ZonesJsonImportExportTest extends AbstractJsonImportExportTest
+final class ZoneJsonImportExportTest extends AbstractJsonImportExportTest
 {
     public function setUp(): void
     {

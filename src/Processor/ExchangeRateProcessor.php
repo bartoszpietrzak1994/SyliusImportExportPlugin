@@ -55,7 +55,7 @@ final class ExchangeRateProcessor implements ResourceProcessorInterface
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
         /** @var ExchangeRateInterface $exchangeRate */
-        $exchangeRate = $this->getExchangeRate($data['Source_currency'], $data['Target_currency']);
+        $exchangeRate = $this->getExchangeRate($data['SourceCurrency'], $data['TargetCurrency']);
         $exchangeRate->setRatio($data['Ratio']);
 
         $this->manager->flush();

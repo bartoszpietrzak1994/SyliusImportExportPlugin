@@ -23,13 +23,13 @@ final class ExchangeRateResourcePlugin extends ResourcePlugin
             $sourceCurrency = $resource->getSourceCurrency();
             Assert::notNull($sourceCurrency);
 
-            $this->addDataForResource($resource, 'Source_currency', $sourceCurrency->getCode());
+            $this->addDataForResource($resource, 'SourceCurrency', $sourceCurrency->getCode());
 
             /** @var CurrencyInterface $targetCurrency */
             $targetCurrency = $resource->getTargetCurrency();
             Assert::notNull($targetCurrency);
 
-            $this->addDataForResource($resource, 'Target_currency', $targetCurrency->getCode());
+            $this->addDataForResource($resource, 'TargetCurrency', $targetCurrency->getCode());
         }
     }
 }

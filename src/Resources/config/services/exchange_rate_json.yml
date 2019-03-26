@@ -1,5 +1,5 @@
 parameters:
-    sylius.exchange_rates_fields: ["Source_currency", "Target_currency", "Ratio"]
+    sylius.exchange_rates_fields: ["SourceCurrency", "TargetCurrency", "Ratio"]
 
 services:
     sylius.exporter.exchange_rates.json:
