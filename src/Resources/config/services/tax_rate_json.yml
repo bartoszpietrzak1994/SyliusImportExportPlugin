@@ -1,5 +1,5 @@
 parameters:
-    sylius.tax_rate_fields: ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+    sylius.tax_rate_fields: ["Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
 
 services:
     sylius.exporter.plugin.resource.tax_rates:
