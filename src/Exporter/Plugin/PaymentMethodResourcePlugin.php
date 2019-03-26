@@ -18,9 +18,9 @@ final class PaymentMethodResourcePlugin extends ResourcePlugin
         /** @var PaymentMethodInterface $resource */
         foreach ($this->resources as $resource) {
             if (null !== $resource->getGatewayConfig()) {
-                $this->addDataForResource($resource, 'Gateway_config', [
-                    'Gateway_name' => $resource->getGatewayConfig()->getGatewayName(),
-                    'Factory_name' => $resource->getGatewayConfig()->getFactoryName(),
+                $this->addDataForResource($resource, 'GatewayConfig', [
+                    'GatewayName' => $resource->getGatewayConfig()->getGatewayName(),
+                    'FactoryName' => $resource->getGatewayConfig()->getFactoryName(),
                     'Config' => $resource->getGatewayConfig()->getConfig(),
                 ]);
             }

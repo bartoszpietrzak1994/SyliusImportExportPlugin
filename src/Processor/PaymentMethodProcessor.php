@@ -61,9 +61,9 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $this->gatewayConfigFactory->createNew();
-        $gatewayConfig->setGatewayName($data['Gateway_config']['Gateway_name']);
-        $gatewayConfig->setFactoryName($data['Gateway_config']['Factory_name']);
-        $gatewayConfig->setConfig($data['Gateway_config']['Config']);
+        $gatewayConfig->setGatewayName($data['GatewayConfig']['GatewayName']);
+        $gatewayConfig->setFactoryName($data['GatewayConfig']['FactoryName']);
+        $gatewayConfig->setConfig($data['GatewayConfig']['Config']);
 
         $paymentMethod->setGatewayConfig($gatewayConfig);
     }

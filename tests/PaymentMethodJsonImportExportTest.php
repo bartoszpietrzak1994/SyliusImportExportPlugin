@@ -20,9 +20,9 @@ final class PaymentMethodJsonImportExportTest extends AbstractJsonImportExportTe
         "Environment": "Lol",
         "Enabled": true,
         "Position": 0,
-        "Gateway_config": {
-            "Gateway_name": "Offline",
-            "Factory_name": "offline",
+        "GatewayConfig": {
+            "GatewayName": "Offline",
+            "FactoryName": "offline",
             "Config": {
                 "Foo": "Bar"
             }
@@ -33,9 +33,9 @@ final class PaymentMethodJsonImportExportTest extends AbstractJsonImportExportTe
         "Environment": "",
         "Enabled": false,
         "Position": 1,
-        "Gateway_config": {
-            "Gateway_name": "Offline Custom",
-            "Factory_name": "offline_custom",
+        "GatewayConfig": {
+            "GatewayName": "Offline Custom",
+            "FactoryName": "offline_custom",
             "Config": {
                 "Bar": "Foo"
             }

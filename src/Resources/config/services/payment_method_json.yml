@@ -1,5 +1,5 @@
 parameters:
-    sylius.payment_methods_fields: ["Code", "Environment", "Enabled", "Position", "Gateway_config"]
+    sylius.payment_methods_fields: ["Code", "Environment", "Enabled", "Position", "GatewayConfig"]
 
 services:
     sylius.exporter.payment_methods.json:
