@@ -1,0 +1,47 @@
+parameters:
+    sylius.zones_fields: ["Code", "Name", "Type", "Scope", "Members"]
+
+services:
+    sylius.exporter.zones.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.zones"
+            - "%sylius.zones_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.zone, format: json }
+
+    sylius.exporter.plugin.resource.zones:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ZoneResourcePlugin
+        arguments:
+            - "@sylius.repository.zone"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.zones:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.zones"]
+            - "%sylius.zones_fields%"
+
+    sylius.processor.zones:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ZoneProcessor
+        arguments:
+            - "@sylius.factory.zone"
+            - "@sylius.repository.zone"
+            - "@sylius.manager.zone"
+            - "@sylius.factory.zone_member"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.zones_fields%"
+
+    sylius.importer.zones.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.zone"
+            - "@sylius.processor.zones"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: zone, format: json }

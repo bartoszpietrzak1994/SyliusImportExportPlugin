@@ -1,0 +1,47 @@
+parameters:
+    sylius.provinces_fields: ["Code", "Country", "Name", "Abbreviation"]
+
+services:
+    sylius.exporter.provinces.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.provinces"
+            - "%sylius.provinces_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.province, format: json }
+
+    sylius.exporter.plugin.resource.provinces:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ProvinceResourcePlugin
+        arguments:
+            - "@sylius.repository.province"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.provinces:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.provinces"]
+            - "%sylius.provinces_fields%"
+
+    sylius.processor.provinces:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ProvinceProcessor
+        arguments:
+            - "@sylius.factory.province"
+            - "@sylius.repository.province"
+            - "@sylius.manager.province"
+            - "@sylius.repository.country"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.provinces_fields%"
+
+    sylius.importer.provinces.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.province"
+            - "@sylius.processor.provinces"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: province, format: json }

@@ -6,7 +6,7 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin;
 
 final class ExchangeRateJsonImportExportTest extends AbstractJsonImportExportTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
