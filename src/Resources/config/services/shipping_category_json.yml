@@ -1,0 +1,46 @@
+parameters:
+    sylius.shipping_categories_fields: ["Code", "Name", "Description"]
+
+services:
+    sylius.exporter.shipping_categories.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.shipping_categories"
+            - "%sylius.shipping_categories_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.shipping_category, format: json }
+
+    sylius.exporter.plugin.resource.shipping_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.shipping_category"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.shipping_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.shipping_categories"]
+            - "%sylius.shipping_categories_fields%"
+
+    sylius.processor.shipping_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.shipping_category"
+            - "@sylius.repository.shipping_category"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.shipping_categories_fields%"
+
+    sylius.importer.shipping_categories.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.shipping_category"
+            - "@sylius.processor.shipping_categories"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: shipping_category, format: json }
