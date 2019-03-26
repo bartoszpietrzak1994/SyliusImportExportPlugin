@@ -12,25 +12,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class TaxRateResourcePlugin extends ResourcePlugin
 {
-    /** @var ResourceInterface */
-    private $taxCategoryRepository;
-
-    /** @var ResourceInterface */
-    private $zoneRepository;
-
-    public function __construct(
-        RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor,
-        EntityManagerInterface $entityManager,
-        ResourceInterface $taxCategoryRepository,
-        ResourceInterface $zoneRepository
-    ) {
-        parent::__construct($repository, $propertyAccessor, $entityManager);
-
-        $this->taxCategoryRepository = $taxCategoryRepository;
-        $this->zoneRepository = $zoneRepository;
-    }
-
     /**
      * {@inheritdoc}
      */

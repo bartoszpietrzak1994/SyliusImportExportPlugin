@@ -1,0 +1,22 @@
+services:
+    sylius.exporter.plugin.resource.tax_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\TaxRateResourcePlugin
+        arguments:
+            - "@sylius.repository.tax_rate"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.tax_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.tax_rates"]
+            - ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+
+    sylius.exporter.tax_rates.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.tax_rates"
+            - ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.tax_rate, format: json }
