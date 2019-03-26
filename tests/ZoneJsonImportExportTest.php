@@ -69,8 +69,7 @@ LOL
         "Type": "province",
         "Scope": "all",
         "Members": ["PL_SL", "PL_MA"]
-    }
-    ,
+    },
     {
         "Code": "WEIRD",
         "Name": "Some random zones",
