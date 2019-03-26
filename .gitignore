@@ -3,6 +3,7 @@
 
 /web/media/image
 
+/composer.lock
 /vendor/
 /node_modules/
 

@@ -95,13 +95,6 @@ services:
             - { name: 'console.command' }
 
     # Plugins for Exporters
-    sylius.exporter.plugin.resource.countries:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
-        arguments:
-            - "@sylius.repository.country"
-            - "@property_accessor"
-            - "@doctrine.orm.entity_manager"
-
     sylius.exporter.plugin.resource.orders:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\OrderResourcePlugin
         arguments:
@@ -132,12 +125,6 @@ services:
             - "@sylius.repository.order"
 
     # PluginPools for Exporters. Can contain multiple Plugins
-    sylius.exporter.pluginpool.countries:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
-        arguments:
-            - ["@sylius.exporter.plugin.resource.countries"]
-            - ["Id", "Code" ,"Enabled"]
-
     sylius.exporter.pluginpool.orders:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
@@ -170,15 +157,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Service\DefaultAddressConcatenation
 
     # generic ResourceProcessors, which can work with just Property-Accessors
-    sylius.processor.countries:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
-        arguments:
-            - "@sylius.factory.country"
-            - "@sylius.repository.country"
-            - "@property_accessor"
-            - "@sylius.importer.metadata_validator"
-            - ["Code"]
-
     sylius.processor.tax_categories:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
         arguments:
