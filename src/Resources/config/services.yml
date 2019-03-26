@@ -118,6 +118,13 @@ services:
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
 
+    sylius.exporter.plugin.resource.tax_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.tax_rate"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
     sylius.exporter.plugin.resource.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
         arguments:
@@ -149,6 +156,12 @@ services:
         arguments:
             - ["@sylius.exporter.plugin.resource.tax_categories"]
             - ["Id", "Code" ,"Name", "Description"]
+
+    sylius.exporter.pluginpool.tax_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.tax_rates"]
+            - ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
 
     sylius.exporter.pluginpool.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
