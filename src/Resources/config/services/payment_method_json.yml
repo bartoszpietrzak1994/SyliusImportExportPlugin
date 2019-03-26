@@ -1,0 +1,47 @@
+parameters:
+    sylius.payment_methods_fields: ["Code", "Environment", "Enabled", "Position", "GatewayConfig"]
+
+services:
+    sylius.exporter.payment_methods.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.payment_methods"
+            - "%sylius.payment_methods_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.payment_method, format: json }
+
+    sylius.exporter.plugin.resource.payment_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PaymentMethodResourcePlugin
+        arguments:
+            - "@sylius.repository.payment_method"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.payment_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.payment_methods"]
+            - "%sylius.payment_methods_fields%"
+
+    sylius.processor.payment_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
+        arguments:
+            - "@sylius.factory.payment_method"
+            - "@sylius.repository.payment_method"
+            - "@sylius.manager.payment_method"
+            - "@sylius.factory.gateway_config"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.payment_methods_fields%"
+
+    sylius.importer.payment_methods.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.payment_method"
+            - "@sylius.processor.payment_methods"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: payment_method, format: json }
