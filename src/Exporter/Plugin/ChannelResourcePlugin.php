@@ -44,12 +44,16 @@ final class ChannelResourcePlugin extends ResourcePlugin
         /** @var ShopBillingDataInterface $shopBillingData */
         $shopBillingData = $channel->getShopBillingData();
 
-        $this->addDataForResource($channel, 'Postcode', $shopBillingData->getPostcode());
-        $this->addDataForResource($channel, 'City', $shopBillingData->getCity());
-        $this->addDataForResource($channel, 'Street', $shopBillingData->getStreet());
-        $this->addDataForResource($channel, 'Country', $shopBillingData->getCountryCode());
-        $this->addDataForResource($channel, 'TaxId', $shopBillingData->getTaxId());
-        $this->addDataForResource($channel, 'Company', $shopBillingData->getCompany());
+        $exportedShopBillingData = [
+            'Postcode' => $shopBillingData->getPostcode(),
+            'City' => $shopBillingData->getCity(),
+            'Street' => $shopBillingData->getStreet(),
+            'Country' => $shopBillingData->getCountryCode(),
+            'TaxId' => $shopBillingData->getTaxId(),
+            'Company' => $shopBillingData->getCompany(),
+        ];
+
+        $this->addDataForResource($channel, 'ShopBillingData', $exportedShopBillingData);
     }
 
     private function addBaseCurrency(ChannelInterface $channel): void

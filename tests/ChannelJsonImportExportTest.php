@@ -71,13 +71,40 @@ LOL
         "SkippingShippingStepAllowed": false,
         "SkippingPaymentStepAllowed": false,
         "AccountVerificationRequired": true,
-        "Postcode": "11-111",
-        "City": "sample_city",
-        "Street": "sample_street",
-        "Country": "sample_country",
-        "TaxId": "sample_tax_id",
-        "Company": "sample_company"
-  }
+        "ShopBillingData" : {
+            "City": "sample_city",
+            "Street": "sample_street",
+            "Country": "sample_country",
+            "TaxId": "sample_tax_id",
+            "Company": "sample_company",
+            "Postcode": "11-111"
+        }
+    },
+    {
+        "Code": "en_US",
+        "Name": "US Web Store",
+        "Description": "sample_description",
+        "Hostname": "localhost",
+        "Color": "GreenYellow",
+        "Enabled": true,
+        "BaseCurrency": "PLN",
+        "DefaultLocale": "pl_PL",
+        "DefaultTaxZone": "NA",
+        "TaxCalculationStrategy": "order_items_based",
+        "ThemeName": "default",
+        "ContactEmail": "sylius@example.com",
+        "SkippingShippingStepAllowed": true,
+        "SkippingPaymentStepAllowed": true,
+        "AccountVerificationRequired": false,
+        "ShopBillingData" : {
+            "City": "sample_city",
+            "Street": "sample_street",
+            "Country": "sample_country",
+            "TaxId": "sample_tax_id",
+            "Company": "sample_company",
+            "Postcode": "11-111"
+        }
+    }
 ]
 LOL;
     }

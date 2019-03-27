@@ -78,16 +78,7 @@ final class ChannelProcessor implements ResourceProcessorInterface
         $channel->setThemeName($data['ThemeName']);
         $channel->setColor($data['Color']);
 
-        $channel->setShopBillingData(
-            $this->getShopBillingData(
-                $data['TaxId'],
-                $data['Company'],
-                $data['Country'],
-                $data['Street'],
-                $data['City'],
-                $data['Postcode']
-            )
-        );
+        $channel->setShopBillingData($this->getShopBillingData($data['ShopBillingData']));
 
         $channel->setBaseCurrency($this->getCurrency($data['BaseCurrency']));
         $channel->setDefaultLocale($this->getLocale($data['DefaultLocale']));
@@ -110,22 +101,16 @@ final class ChannelProcessor implements ResourceProcessorInterface
         return $channel;
     }
 
-    private function getShopBillingData(
-        string $taxId,
-        string $company,
-        string $country,
-        string $street,
-        string $city,
-        string $postcode
-    ): ShopBillingDataInterface {
+    private function getShopBillingData(array $importedShopBillingData): ShopBillingDataInterface
+    {
         $shopBillingData = new ShopBillingData();
 
-        $shopBillingData->setTaxId($taxId);
-        $shopBillingData->setCompany($company);
-        $shopBillingData->setCountryCode($country);
-        $shopBillingData->setStreet($street);
-        $shopBillingData->setCity($city);
-        $shopBillingData->setPostcode($postcode);
+        $shopBillingData->setTaxId($importedShopBillingData['TaxId']);
+        $shopBillingData->setCompany($importedShopBillingData['Company']);
+        $shopBillingData->setCountryCode($importedShopBillingData['Country']);
+        $shopBillingData->setStreet($importedShopBillingData['Street']);
+        $shopBillingData->setCity($importedShopBillingData['City']);
+        $shopBillingData->setPostcode($importedShopBillingData['Postcode']);
 
         $this->manager->persist($shopBillingData);
 

@@ -15,12 +15,7 @@ parameters:
         - "SkippingShippingStepAllowed"
         - "SkippingPaymentStepAllowed"
         - "AccountVerificationRequired"
-        - "Postcode"
-        - "City"
-        - "Street"
-        - "Country"
-        - "TaxId"
-        - "Company"
+        - "ShopBillingData"
 
 services:
     sylius.exporter.channels.json:
