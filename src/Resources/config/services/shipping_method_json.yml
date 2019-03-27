@@ -1,0 +1,49 @@
+parameters:
+    sylius.shipping_method_fields: ["Code", "Calculator", "Position", "Category", "CategoryRequirement", "Configuration", "Translations", "Zone", "TaxCategory", "Enabled"]
+
+services:
+    sylius.exporter.plugin.resource.shipping_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ShippingMethodResourcePlugin
+        arguments:
+            - "@sylius.repository.shipping_method"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.shipping_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.shipping_methods"]
+            - "%sylius.shipping_method_fields%"
+
+    sylius.exporter.shipping_method.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.shipping_methods"
+            - "%sylius.shipping_method_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.shipping_method, format: json }
+
+    sylius.processor.shipping_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ShippingMethodProcessor
+        arguments:
+            - "@sylius.factory.shipping_method"
+            - "@sylius.repository.shipping_method"
+            - "@sylius.repository.zone"
+            - "@sylius.repository.shipping_category"
+            - "@sylius.repository.tax_category"
+            - "@sylius.manager.shipping_method"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.shipping_method_fields%"
+
+    sylius.importer.shipping_methods.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.shipping_method"
+            - "@sylius.processor.shipping_methods"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: shipping_method, format: json }

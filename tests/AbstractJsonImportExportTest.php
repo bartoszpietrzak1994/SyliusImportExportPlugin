@@ -50,7 +50,6 @@ abstract class AbstractJsonImportExportTest extends KernelTestCase
         file_put_contents($file, $content);
 
         $this->doImport($name, $file);
-
     }
 
     abstract protected function provideName(): string;
