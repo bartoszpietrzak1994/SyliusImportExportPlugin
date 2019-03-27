@@ -61,7 +61,6 @@ final class ChannelProcessor implements ResourceProcessorInterface
         $this->headerKeys = $headerKeys;
     }
 
-
     public function process(array $data): void
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
