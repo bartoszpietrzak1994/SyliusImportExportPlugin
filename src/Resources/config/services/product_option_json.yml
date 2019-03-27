@@ -1,0 +1,48 @@
+parameters:
+    sylius.product_options_fields: ["Code", "Position", "Translations", "Values"]
+
+services:
+    sylius.exporter.product_options.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.product_options"
+            - "%sylius.product_options_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.product_option, format: json }
+
+    sylius.exporter.plugin.resource.product_options:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ProductOptionResourcePlugin
+        arguments:
+            - "@sylius.repository.product_option"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.product_options:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.product_options"]
+            - "%sylius.product_options_fields%"
+
+    sylius.processor.product_options:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ProductOptionProcessor
+        arguments:
+            - "@sylius.factory.product_option"
+            - "@sylius.repository.product_option"
+            - "@sylius.manager.product_option"
+            - "@sylius.repository.product_option_value"
+            - "@sylius.factory.product_option_value"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.product_options_fields%"
+
+    sylius.importer.product_options.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.product_option"
+            - "@sylius.processor.product_options"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: product_option, format: json }
