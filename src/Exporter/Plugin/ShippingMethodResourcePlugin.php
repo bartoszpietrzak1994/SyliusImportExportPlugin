@@ -27,7 +27,7 @@ final class ShippingMethodResourcePlugin extends ResourcePlugin
             }
 
             if (null !== $resource->getTaxCategory()) {
-                $this->addDataForResource($resource, "TaxCategory", $resource->getTaxCategory()->getCode());
+                $this->addDataForResource($resource, 'TaxCategory', $resource->getTaxCategory()->getCode());
             }
 
             $translations = [];
