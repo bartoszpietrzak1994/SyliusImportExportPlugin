@@ -1,0 +1,70 @@
+parameters:
+    sylius.channel_fields:
+        - "Code"
+        - "Name"
+        - "Description"
+        - "Hostname"
+        - "Color"
+        - "Enabled"
+        - "BaseCurrency"
+        - "DefaultLocale"
+        - "DefaultTaxZone"
+        - "TaxCalculationStrategy"
+        - "ThemeName"
+        - "ContactEmail"
+        - "SkippingShippingStepAllowed"
+        - "SkippingPaymentStepAllowed"
+        - "AccountVerificationRequired"
+        - "Postcode"
+        - "City"
+        - "Street"
+        - "Country"
+        - "TaxId"
+        - "Company"
+
+services:
+    sylius.exporter.channels.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.channels"
+            - "%sylius.channel_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.channel, format: json }
+
+    sylius.exporter.pluginpool.channels:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.channels"]
+            - "%sylius.channel_fields%"
+
+    sylius.exporter.plugin.resource.channels:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ChannelResourcePlugin
+        arguments:
+            - "@sylius.repository.channel"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.processor.channels:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ChannelProcessor
+        arguments:
+            - "@sylius.factory.channel"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.currency"
+            - "@sylius.repository.locale"
+            - "@sylius.repository.zone"
+            - "@doctrine.orm.entity_manager"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.channel_fields%"
+
+    sylius.importer.channels.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.channel"
+            - "@sylius.processor.channels"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: channel, format: json }
