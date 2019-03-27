@@ -1,3 +1,6 @@
+parameters:
+    sylius.tax_rate_fields: ["Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+
 services:
     sylius.exporter.plugin.resource.tax_rates:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\TaxRateResourcePlugin
@@ -10,13 +13,36 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.tax_rates"]
-            - ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+            - "%sylius.tax_rate_fields%"
 
     sylius.exporter.tax_rates.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
             - "@sylius.exporter.pluginpool.tax_rates"
-            - ["Id", "Code", "Category", "Name", "Amount", "IncludedInPrice", "Calculator", "Zone"]
+            - "%sylius.tax_rate_fields%"
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.tax_rate, format: json }
+
+    sylius.processor.tax_rates:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\TaxRateProcessor
+        arguments:
+            - "@sylius.factory.tax_rate"
+            - "@sylius.repository.tax_rate"
+            - "@sylius.repository.tax_category"
+            - "@sylius.repository.zone"
+            - "@sylius.manager.tax_rate"
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.tax_rate_fields%"
+
+    sylius.importer.tax_rates.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.tax_rate"
+            - "@sylius.processor.tax_rates"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: tax_rate, format: json }
