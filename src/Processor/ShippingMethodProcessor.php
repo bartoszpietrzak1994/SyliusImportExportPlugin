@@ -6,11 +6,11 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Sylius\Component\Addressing\Model\ZoneInterface;
-use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Shipping\Model\ShippingCategoryInterface;
+use Sylius\Component\Taxation\Model\TaxCategoryInterface;
 
 final class ShippingMethodProcessor implements ResourceProcessorInterface
 {
@@ -27,7 +27,7 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
     private $categoryRepository;
 
     /** @var RepositoryInterface */
-    private $channelRepository;
+    private $taxCategoryRepository;
 
     /** @var ObjectManager */
     private $manager;
@@ -43,7 +43,7 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         RepositoryInterface $shippingMethodRepository,
         RepositoryInterface $zoneRepository,
         RepositoryInterface $categoryRepository,
-        RepositoryInterface $channelRepository,
+        RepositoryInterface $taxCategoryRepository,
         ObjectManager $manager,
         MetadataValidatorInterface $metadataValidator,
         array $headerKeys
@@ -52,7 +52,7 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         $this->shippingMethodRepository = $shippingMethodRepository;
         $this->zoneRepository = $zoneRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->channelRepository = $channelRepository;
+        $this->taxCategoryRepository = $taxCategoryRepository;
         $this->manager = $manager;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
@@ -64,15 +64,14 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
 
         /** @var ShippingMethodInterface $shippingMethod */
         $shippingMethod = $this->getShippingMethod($data['Code']);
-        $shippingMethod->setName($data['Name']);
         $shippingMethod->setZone($this->findZone($data['Zone']));
         $shippingMethod->setCategory($this->findCategory($data['Category']));
         $shippingMethod->setCalculator($data['Calculator']);
         $shippingMethod->setEnabled($data['Enabled']);
-        $shippingMethod->setDescription($data['Description']);
         $shippingMethod->setConfiguration($data['Configuration']);
         $shippingMethod->setPosition($data['Position']);
         $shippingMethod->setCategoryRequirement($data['CategoryRequirement']);
+        $shippingMethod->setTaxCategory($this->findTaxCategory($data['TaxCategory']));
 
         foreach ($data['Translations'] as $locale => $translation) {
             $shippingMethod->setCurrentLocale($locale);
@@ -133,11 +132,11 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         return $shippingCategory;
     }
 
-    private function findChannel(?string $code): ?ChannelInterface
+    private function findTaxCategory(?string $code): ?TaxCategoryInterface
     {
-        /** @var ChannelInterface|null $channel */
-        $channel = $this->channelRepository->findOneBy(['code' => $code]);
+        /** @var TaxCategoryInterface|null $taxCategory */
+        $taxCategory = $this->taxCategoryRepository->findOneBy(['code' => $code]);
 
-        return $channel;
+        return $taxCategory;
     }
 }

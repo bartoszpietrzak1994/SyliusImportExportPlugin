@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Shipping\Model\ShippingMethodTranslationInterface;
 
@@ -27,13 +26,9 @@ final class ShippingMethodResourcePlugin extends ResourcePlugin
                 $this->addDataForResource($resource, 'Category', $resource->getCategory()->getCode());
             }
 
-            $channels = [];
-            /** @var ChannelInterface $channel */
-            foreach ($resource->getChannels() as $channel) {
-                $channels[] = $channel->getCode();
+            if (null !== $resource->getTaxCategory()) {
+                $this->addDataForResource($resource, "TaxCategory", $resource->getTaxCategory()->getCode());
             }
-
-            $this->addDataForResource($resource, 'Channels', $channels);
 
             $translations = [];
             /** @var ShippingMethodTranslationInterface $translation */

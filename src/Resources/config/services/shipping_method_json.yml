@@ -1,5 +1,5 @@
 parameters:
-    sylius.shipping_method_fields: ["Code", "Position", "Category", "CategoryRequirement", "Configuration", "Translations", "Zone", "TaxCategory", "Channels"]
+    sylius.shipping_method_fields: ["Code", "Calculator", "Position", "Category", "CategoryRequirement", "Configuration", "Translations", "Zone", "TaxCategory", "Enabled"]
 
 services:
     sylius.exporter.plugin.resource.shipping_methods:
@@ -31,15 +31,15 @@ services:
             - "@sylius.repository.shipping_method"
             - "@sylius.repository.zone"
             - "@sylius.repository.shipping_category"
-            - "@sylius.repository.channel"
+            - "@sylius.repository.tax_category"
             - "@sylius.manager.shipping_method"
             - "@sylius.importer.metadata_validator"
             - "%sylius.shipping_method_fields%"
 
-    sylius.importer.taxons.json:
+    sylius.importer.shipping_methods.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
-            - "@sylius.manager.taxon"
+            - "@sylius.manager.shipping_method"
             - "@sylius.processor.shipping_methods"
             - "@sylius.importer.result"
             - "%sylius.importer.batch_size%"
