@@ -90,7 +90,6 @@ final class OrderProcessor implements ResourceProcessorInterface
         $this->headerKeys = $headerKeys;
     }
 
-
     public function process(array $data): void
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
@@ -143,10 +142,10 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var OrderInterface|null $order */
         $order = $this->orderRepository->findOneByNumber($number);
 
-        if ($order === null)
-        {
+        if ($order === null) {
             /** @var OrderInterface $order */
             $order = $this->orderFactory->createNew();
+            $order->setNumber($number);
 
             $this->manager->persist($order);
         }
@@ -159,6 +158,8 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var CustomerInterface $customer */
         $customer = new Customer();
 
+        $customer->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
+        $customer->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
         $customer->setEmail($parameters['Email']);
         $customer->setEmailCanonical($parameters['EmailCanonical']);
         $customer->setBirthday($this->getDateTimeFromString($parameters['Birthday']));

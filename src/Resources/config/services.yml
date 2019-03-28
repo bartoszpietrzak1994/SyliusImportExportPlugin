@@ -47,10 +47,10 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool
         arguments: [!tagged sylius.exporter_transformer]
 
-#    sylius.exporters_transformer_datetime:
-#        class: FriendsOfSylius\SyliusImportEOrderProcessor.php:106xportPlugin\Exporter\Transformer\Handler\DateTimeToStringHandler
-#        tags:
-#            - { name: sylius.exporter_transformer }
+    sylius.exporters_transformer_datetime:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\DateTimeToStringHandler
+        tags:
+            - { name: sylius.exporter_transformer }
 
     sylius.exporters_transformer_integer_money_format:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\IntegerToMoneyFormatHandler
@@ -117,12 +117,6 @@ services:
             - "@sylius.repository.order"
 
     # PluginPools for Exporters. Can contain multiple Plugins
-#    sylius.exporter.pluginpool.orders:
-#        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
-#        arguments:
-#            - ["@sylius.exporter.plugin.resource.orders"]
-#            - ["Number", "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
-
     sylius.exporter.pluginpool.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:

@@ -11,7 +11,7 @@ final class DateTimeToStringHandler extends Handler
     /** @var string */
     private $format;
 
-    public function __construct(string $format = 'Y-m-d H:i:s')
+    public function __construct(string $format = 'Y-m-d')
     {
         $this->format = $format;
     }

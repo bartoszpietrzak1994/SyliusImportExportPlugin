@@ -86,6 +86,7 @@ final class OrderResourcePlugin extends ResourcePlugin
                 'UpdatedAt',
                 null !== $resource->getUpdatedAt() ? $this->dateTimeFormatter->toString($resource->getUpdatedAt()) : null
             );
+            $this->addDataForResource($resource, 'Number', $resource->getNumber());
         }
     }
 
@@ -150,7 +151,7 @@ final class OrderResourcePlugin extends ResourcePlugin
                 'Locked' => $adjustment->isLocked(),
                 'Charge' => $adjustment->isCharge(),
                 'Credit' => $adjustment->isCredit(),
-                'OriginCode' => $adjustment->getOriginCode()
+                'OriginCode' => $adjustment->getOriginCode(),
             ];
         }
 
@@ -184,7 +185,7 @@ final class OrderResourcePlugin extends ResourcePlugin
                 'State' => $payment->getState(),
                 'CurrencyCode' => $payment->getCurrencyCode(),
                 'Amount' => $payment->getAmount(),
-                'Details' => $payment->getDetails()
+                'Details' => $payment->getDetails(),
             ];
         }
 
@@ -219,7 +220,6 @@ final class OrderResourcePlugin extends ResourcePlugin
             'LastName' => $customer->getLastName(),
             'Birthday' => null !== $customer->getBirthday() ? $this->dateTimeFormatter->toString($customer->getBirthday()) : null,
             'Gender' => $customer->getGender(),
-            'Group' => null !== $customer->getGroup() ? $customer->getGroup()->getName() : null,
             'PhoneNumber' => $customer->getPhoneNumber(),
             'SubscribedToNewsletter' => $customer->isSubscribedToNewsletter(),
             'DefaultAddress' => $this->getAddressAsArray($customer->getDefaultAddress()),

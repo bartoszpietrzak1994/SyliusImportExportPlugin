@@ -8,12 +8,15 @@ use DateTime;
 
 final class DateTimeFormatter implements DateTimeFormatterInterface
 {
-    function toDateTime(string $dateTimeAsString): \DateTimeInterface
+    public function toDateTime(string $dateTimeAsString): ?\DateTimeInterface
     {
-        return DateTime::createFromFormat(self::DATE_TIME_FORMAT, $dateTimeAsString);
+        /** @var DateTime|false $dateTime */
+        $dateTime = DateTime::createFromFormat(self::DATE_TIME_FORMAT, $dateTimeAsString);
+
+        return false !== $dateTime ? $dateTime : null;
     }
 
-    function toString(\DateTimeInterface $dateTime): string
+    public function toString(\DateTimeInterface $dateTime): string
     {
         return $dateTime->format(self::DATE_TIME_FORMAT);
     }

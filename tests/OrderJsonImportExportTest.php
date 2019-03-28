@@ -16,14 +16,14 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
         return <<<LOL
 [
   {
-    "CreatedAt": "2019-03-28 12:14:00",
-    "UpdatedAt":"2019-03-28 12:14:00",
-    "CheckoutCompletedAt": "2019-03-28 12:14:00",
+    "CreatedAt": "2019-03-28 22:28:28",
+    "UpdatedAt": "2019-03-28 22:28:28",
+    "CheckoutCompletedAt": "2019-03-28 22:28:28",
     "CheckoutState": "completed",
     "Shipments": [
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
+        "CreatedAt": "2019-03-28 22:28:28",
+        "UpdatedAt": "2019-03-28 22:28:28",
         "State": "ready",
         "Method": "ups",
         "Tracking": null,
@@ -33,47 +33,45 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
     "ShippingRequired": "",
     "ShippingState": "ready",
     "ShippingAddress": {
-      "FirstName": "Zackary",
-      "LastName": "Wunsch",
+      "FirstName": "Daisha",
+      "LastName": "Kling",
       "PhoneNumber": null,
       "Company": null,
       "CountryCode": "US",
       "ProvinceCode": null,
       "ProvinceName": null,
-      "Street": "492 Linwood Vista Apt. 868",
-      "City": "Lake Gracie",
-      "Postcode": "36673"
+      "Street": "277 Ratke Manor Apt. 404",
+      "City": "Fannieton",
+      "Postcode": "73053"
     },
     "BillingAddress": {
-      "FirstName": "Zackary",
-      "LastName": "Wunsch",
+      "FirstName": "Daisha",
+      "LastName": "Kling",
       "PhoneNumber": null,
       "Company": null,
       "CountryCode": "US",
       "ProvinceCode": null,
       "ProvinceName": null,
-      "Street": "492 Linwood Vista Apt. 868",
-      "City": "Lake Gracie",
-      "Postcode": "36673"
+      "Street": "277 Ratke Manor Apt. 404",
+      "City": "Fannieton",
+      "Postcode": "73053"
     },
     "Number": "000000001",
-    "Notes": "Sit quisquam suscipit cumque.",
+    "Notes": "",
     "Items": [
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
-        "Quantity": 2,
-        "UnitPrice": 71,
-        "Total": 36,
+        "Quantity": 3,
+        "UnitPrice": 945,
+        "Total": 1076,
         "Immutable": false,
         "Units": [
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 18,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 358,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -81,11 +79,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -53,
+                "Amount": -587,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -95,12 +93,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 18,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 359,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -108,11 +106,38 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -53,
+                "Amount": -586,
+                "Neutral": false,
+                "Locked": false,
+                "Charge": true,
+                "Credit": false,
+                "OriginCode": "christmas"
+              }
+            ]
+          },
+          {
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 359,
+            "Shipment": {
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
+              "State": "ready",
+              "Method": "ups",
+              "Tracking": null,
+              "Tracked": false
+            },
+            "Adjustments": [
+              {
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
+                "Type": "order_promotion",
+                "Label": "Christmas",
+                "Amount": -586,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -127,20 +152,18 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
         "Variant": "8c557914-00cf-3796-a070-69fc9c0d0e70-variant-0"
       },
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
-        "Quantity": 3,
-        "UnitPrice": 412,
-        "Total": 322,
+        "Quantity": 4,
+        "UnitPrice": 588,
+        "Total": 894,
         "Immutable": false,
         "Units": [
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 107,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 223,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -148,11 +171,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -305,
+                "Amount": -365,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -162,12 +185,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 107,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 223,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -175,11 +198,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -305,
+                "Amount": -365,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -189,12 +212,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 108,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 224,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -202,11 +225,38 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -304,
+                "Amount": -364,
+                "Neutral": false,
+                "Locked": false,
+                "Charge": true,
+                "Credit": false,
+                "OriginCode": "christmas"
+              }
+            ]
+          },
+          {
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 224,
+            "Shipment": {
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
+              "State": "ready",
+              "Method": "ups",
+              "Tracking": null,
+              "Tracked": false
+            },
+            "Adjustments": [
+              {
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
+                "Type": "order_promotion",
+                "Label": "Christmas",
+                "Amount": -364,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -221,20 +271,18 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
         "Variant": "8c557914-00cf-3796-a070-69fc9c0d0e70-variant-1"
       },
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
-        "Quantity": 4,
-        "UnitPrice": 111,
-        "Total": 116,
+        "Quantity": 5,
+        "UnitPrice": 584,
+        "Total": 1110,
         "Immutable": false,
         "Units": [
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 29,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 222,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -242,11 +290,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -82,
+                "Amount": -362,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -256,12 +304,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 29,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 222,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -269,11 +317,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -82,
+                "Amount": -362,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -283,12 +331,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 29,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 222,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -296,11 +344,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -82,
+                "Amount": -362,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -310,12 +358,12 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             ]
           },
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 29,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 222,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -323,11 +371,38 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -82,
+                "Amount": -362,
+                "Neutral": false,
+                "Locked": false,
+                "Charge": true,
+                "Credit": false,
+                "OriginCode": "christmas"
+              }
+            ]
+          },
+          {
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 222,
+            "Shipment": {
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
+              "State": "ready",
+              "Method": "ups",
+              "Tracking": null,
+              "Tracked": false
+            },
+            "Adjustments": [
+              {
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
+                "Type": "order_promotion",
+                "Label": "Christmas",
+                "Amount": -362,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -342,20 +417,18 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
         "Variant": "8c557914-00cf-3796-a070-69fc9c0d0e70-variant-2"
       },
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
-        "Quantity": 4,
-        "UnitPrice": 370,
-        "Total": 385,
+        "Quantity": 1,
+        "UnitPrice": 799,
+        "Total": 304,
         "Immutable": false,
         "Units": [
           {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 96,
+            "CreatedAt": "2019-03-28 22:28:28",
+            "UpdatedAt": "2019-03-28 22:28:28",
+            "Total": 304,
             "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
+              "CreatedAt": "2019-03-28 22:28:28",
+              "UpdatedAt": "2019-03-28 22:28:28",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -363,90 +436,11 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             },
             "Adjustments": [
               {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
+                "CreatedAt": "2019-03-28 22:28:28",
+                "UpdatedAt": "2019-03-28 22:28:28",
                 "Type": "order_promotion",
                 "Label": "Christmas",
-                "Amount": -274,
-                "Neutral": false,
-                "Locked": false,
-                "Charge": true,
-                "Credit": false,
-                "OriginCode": "christmas"
-              }
-            ]
-          },
-          {
-            "Total": 96,
-            "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
-              "State": "ready",
-              "Method": "ups",
-              "Tracking": null,
-              "Tracked": false
-            },
-            "Adjustments": [
-              {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
-                "Type": "order_promotion",
-                "Label": "Christmas",
-                "Amount": -274,
-                "Neutral": false,
-                "Locked": false,
-                "Charge": true,
-                "Credit": false,
-                "OriginCode": "christmas"
-              }
-            ]
-          },
-          {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 96,
-            "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
-              "State": "ready",
-              "Method": "ups",
-              "Tracking": null,
-              "Tracked": false
-            },
-            "Adjustments": [
-              {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
-                "Type": "order_promotion",
-                "Label": "Christmas",
-                "Amount": -274,
-                "Neutral": false,
-                "Locked": false,
-                "Charge": true,
-                "Credit": false,
-                "OriginCode": "christmas"
-              }
-            ]
-          },
-          {
-            "CreatedAt": "2019-03-28 12:14:00",
-            "UpdatedAt":"2019-03-28 12:14:00",
-            "Total": 97,
-            "Shipment": {
-              "CreatedAt": "2019-03-28 12:14:00",
-              "UpdatedAt":"2019-03-28 12:14:00",
-              "State": "ready",
-              "Method": "ups",
-              "Tracking": null,
-              "Tracked": false
-            },
-            "Adjustments": [
-              {
-                "CreatedAt": "2019-03-28 12:14:00",
-                "UpdatedAt":"2019-03-28 12:14:00",
-                "Type": "order_promotion",
-                "Label": "Christmas",
-                "Amount": -273,
+                "Amount": -495,
                 "Neutral": false,
                 "Locked": false,
                 "Charge": true,
@@ -458,19 +452,19 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
         ],
         "Adjustments": [],
         "Product": "8c557914-00cf-3796-a070-69fc9c0d0e70",
-        "Variant": "8c557914-00cf-3796-a070-69fc9c0d0e70-variant-4"
+        "Variant": "8c557914-00cf-3796-a070-69fc9c0d0e70-variant-3"
       }
     ],
-    "ItemsTotal": 859,
-    "Total": "25.70",
+    "ItemsTotal": 3384,
+    "Total": "47.72",
     "State": "new",
     "Adjustments": [
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
+        "CreatedAt": "2019-03-28 22:28:28",
+        "UpdatedAt": "2019-03-28 22:28:28",
         "Type": "shipping",
         "Label": "UPS",
-        "Amount": 1711,
+        "Amount": 1388,
         "Neutral": false,
         "Locked": false,
         "Charge": false,
@@ -479,34 +473,33 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
       }
     ],
     "Customer": {
-      "CreatedAt": "2019-03-28 12:14:00",
-      "UpdatedAt":"2019-03-28 12:14:00",
-      "Email": "bergnaum.maudie@yahoo.com",
-      "EmailCanonical": "bergnaum.maudie@yahoo.com",
-      "FirstName": "Buck",
-      "LastName": "Zboncak",
+      "CreatedAt": "2019-03-28 22:28:26",
+      "UpdatedAt": "2019-03-28 22:28:26",
+      "Email": "dare.marcelino@yahoo.com",
+      "EmailCanonical": "dare.marcelino@yahoo.com",
+      "FirstName": "Ava",
+      "LastName": "Rowe",
       "Birthday": null,
       "Gender": "u",
-      "Group": "Wholesale",
       "PhoneNumber": null,
       "SubscribedToNewsletter": false,
       "DefaultAddress": []
     },
     "Payments": [
       {
-        "CreatedAt": "2019-03-28 12:14:00",
-        "UpdatedAt":"2019-03-28 12:14:00",
+        "CreatedAt": "2019-03-28 22:28:28",
+        "UpdatedAt": "2019-03-28 22:28:28",
         "PaymentMethod": "bank_transfer",
         "State": "new",
         "CurrencyCode": "USD",
-        "Amount": 2570,
+        "Amount": 4772,
         "Details": []
       }
     ],
     "PaymentState": "awaiting_payment",
     "CurrencyCode": "USD",
     "LocaleCode": "en_US",
-    "TokenValue": "j-xxPGloqi",
+    "TokenValue": "d0pN8sk_38",
     "CustomerIp": "",
     "Channel": "US_WEB"
   }
@@ -521,7 +514,7 @@ LOL;
         $this->loadJsonFixtures('locale', <<<LOL
 [
     {
-        "Code": "pl_PL"
+        "Code": "en_US"
     }
 ]
 LOL
@@ -530,7 +523,7 @@ LOL
         $this->loadJsonFixtures('currency', <<<LOL
 [
     {
-        "Code": "PLN"
+        "Code": "USD"
     }
 ]
 LOL
@@ -558,8 +551,8 @@ LOL
         "Hostname": "localhost",
         "Color": "GreenYellow",
         "Enabled": true,
-        "BaseCurrency": "PLN",
-        "DefaultLocale": "pl_PL",
+        "BaseCurrency": "USD",
+        "DefaultLocale": "en_US",
         "DefaultTaxZone": "NA",
         "TaxCalculationStrategy": "order_items_based",
         "ThemeName": "default",
