@@ -170,7 +170,7 @@ final class ProductProcessor implements ResourceProcessorInterface
             $productAssociation->setType($this->productAssociationTypeRepository->findOneBy(['code' => $associationData['Type']]));
 
             foreach ($associationData['Products'] as $productCode) {
-                $productAssociation->addAssociatedProduct($this->getProduct($productCode));
+                $productAssociation->addAssociatedProduct($productCode === $data['Code'] ? $product : $this->getProduct($productCode));
             }
 
             $product->addAssociation($productAssociation);

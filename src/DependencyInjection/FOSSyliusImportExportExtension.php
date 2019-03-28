@@ -10,10 +10,11 @@ use Port\Spreadsheet\SpreadsheetReaderFactory;
 use Port\Spreadsheet\SpreadsheetWriter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class FOSSyliusImportExportExtension extends Extension
+class FOSSyliusImportExportExtension extends Extension implements PrependExtensionInterface
 {
     private const CLASS_CSV_READER = CsvReaderFactory::class;
     private const CLASS_CSV_WRITER = CsvWriter::class;
@@ -64,5 +65,17 @@ class FOSSyliusImportExportExtension extends Extension
         $loader->load('services_import_json.yml');
 
         $loader->load('services_export_json.yml');
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->prependExtensionConfig('knp_gaufrette', [
+            'adapters' => [
+                'friends_of_sylius_import_export' => '%friends_of_sylius.import_export.gaufrette_adapter_config%',
+            ],
+            'filesystems' => [
+                'friends_of_sylius_import_export' => ['adapter' => 'friends_of_sylius_import_export'],
+            ],
+        ]);
     }
 }

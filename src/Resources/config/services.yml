@@ -168,3 +168,22 @@ services:
             - "@property_accessor"
             - "@sylius.importer.metadata_validator"
             - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+
+    FriendsOfSylius\SyliusImportExportPlugin\Synchronisation\Exporter:
+        arguments:
+            - "@service_container"
+            - "@sylius.exporters_registry"
+
+    FriendsOfSylius\SyliusImportExportPlugin\Synchronisation\Importer:
+        arguments:
+            - "@sylius.importers_registry"
+
+    FriendsOfSylius\SyliusImportExportPlugin\Synchronisation\BackendSynchroniser:
+        arguments:
+            - "@gaufrette.friends_of_sylius_import_export_filesystem"
+            - "@FriendsOfSylius\\SyliusImportExportPlugin\\Synchronisation\\Exporter"
+            - "@FriendsOfSylius\\SyliusImportExportPlugin\\Synchronisation\\Importer"
+            - "@doctrine.orm.default_entity_manager"
+            - "@gaufrette.sylius_image_filesystem"
+            - "@sylius.repository.product_image"
+            - "@sylius.repository.taxon_image"

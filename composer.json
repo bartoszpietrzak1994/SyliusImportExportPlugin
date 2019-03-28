@@ -8,7 +8,8 @@
         "sylius/sylius": "^1.0",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^3.3 | ^4.1",
-        "queue-interop/queue-interop": "^0.6.2"
+        "queue-interop/queue-interop": "^0.6.2",
+        "knplabs/knp-gaufrette-bundle": "^0.5.3"
     },
     "suggest": {
         "portphp/spreadsheet": "To support importing Excel and LibreOffice Calc files, use version ^1.1",
