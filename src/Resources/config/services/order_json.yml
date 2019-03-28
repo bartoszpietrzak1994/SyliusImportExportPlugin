@@ -43,7 +43,7 @@ services:
             - "%sylius.order_fields%"
 
     sylius.exporter.plugin.resource.orders:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\Order\OrderResourcePlugin
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\OrderResourcePlugin
         arguments:
             - "@sylius.repository.order"
             - "@property_accessor"
