@@ -1,0 +1,57 @@
+parameters:
+    sylius.products_fields:
+        - "Code"
+        - "MainTaxon"
+        - "Enabled"
+        - "VariantSelectionMethod"
+        - "AverageRating"
+        - "Translations"
+        - "Taxons"
+        - "Channels"
+        - "Images"
+        - "Associations"
+        - "Attributes"
+        - "Options"
+        - "Variants"
+
+services:
+    sylius.exporter.plugin.resource.products:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ProductResourcePlugin
+        arguments:
+            - "@sylius.repository.product"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    sylius.exporter.pluginpool.products:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.products"]
+            - "%sylius.products_fields%"
+
+    sylius.exporter.products.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.products"
+            - "%sylius.products_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.product, format: json }
+
+    sylius.processor.products:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ProductProcessor
+        autowire: true
+        arguments:
+            $metadataValidator: "@sylius.importer.metadata_validator"
+            $headerKeys: "%sylius.products_fields%"
+
+    sylius.importer.products.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.product"
+            - "@sylius.processor.products"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: product, format: json }
