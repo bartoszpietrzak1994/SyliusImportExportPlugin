@@ -43,6 +43,19 @@ final class JsonResourceExporter extends ResourceExporter
         }
     }
 
+    public function exportData(array $idsToExport): array
+    {
+        $this->pluginPool->initPlugins($idsToExport);
+
+        $exportIdDataArray = [];
+
+        foreach ($idsToExport as $id) {
+            $exportIdDataArray[] = $this->getDataForId((string) $id);
+        }
+
+        return $exportIdDataArray;
+    }
+
     /**
      * {@inheritdoc}
      */

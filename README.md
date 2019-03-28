@@ -23,6 +23,10 @@
     <a href="https://sylius.com/plugins/" target="_blank"><img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200"></a>
 </p>
 
+# This is a fork
+
+You need to define friends_of_sylius.import_export.gaufrette_adapter_config` parameter with Gaufrette adapter config for backend synchroniser.
+
 ## Installation
 
 1. Require relevant portphp format support

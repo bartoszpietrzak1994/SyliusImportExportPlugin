@@ -1,6 +1,9 @@
 parameters:
     locale: en_US
     secret: "Heron is the best animal in the world!"
+    friends_of_sylius.import_export.gaufrette_adapter_config:
+        local:
+            directory: "%kernel.cache_dir%/friends_of_sylius_import_export"
 
 imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
