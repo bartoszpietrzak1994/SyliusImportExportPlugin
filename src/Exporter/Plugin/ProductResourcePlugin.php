@@ -15,6 +15,7 @@ use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Product\Model\ProductOptionInterface;
 use Sylius\Component\Product\Model\ProductOptionValueInterface;
 use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
+use Sylius\Component\Resource\Model\CodeAwareInterface;
 
 final class ProductResourcePlugin extends ResourcePlugin
 {
@@ -48,13 +49,13 @@ final class ProductResourcePlugin extends ResourcePlugin
 
             $this->addDataForResource($resource, 'Taxons', array_map(function (ProductTaxonInterface $productTaxon): array {
                 return [
-                    'Taxon' => $productTaxon->getTaxon()->getCode(),
+                    'Taxon' => $this->getPossibleResourceCodeValue($productTaxon->getTaxon()),
                     'Position' => $productTaxon->getPosition(),
                 ];
             }, $resource->getProductTaxons()->toArray()));
 
-            $this->addDataForResource($resource, 'Channels', array_map(function (ChannelInterface $channel): string {
-                return $channel->getCode();
+            $this->addDataForResource($resource, 'Channels', array_map(function (ChannelInterface $channel): ?string {
+                return $this->getPossibleResourceCodeValue($channel);
             }, $resource->getChannels()->toArray()));
 
             $this->addDataForResource($resource, 'Images', array_map(function (ProductImageInterface $productImage): array {
@@ -66,24 +67,23 @@ final class ProductResourcePlugin extends ResourcePlugin
 
             $this->addDataForResource($resource, 'Associations', array_map(function (ProductAssociationInterface $productAssociation): array {
                 return [
-                    'Type' => $productAssociation->getType()->getCode(),
-                    'Products' => array_map(function (ProductInterface $product): string {
-                        return $product->getCode();
+                    'Type' => $this->getPossibleResourceCodeValue($productAssociation->getType()),
+                    'Products' => array_map(function (ProductInterface $product): ?string {
+                        return $this->getPossibleResourceCodeValue($product);
                     }, $productAssociation->getAssociatedProducts()->toArray()),
                 ];
             }, $resource->getAssociations()->toArray()));
 
-
             $this->addDataForResource($resource, 'Attributes', array_map(function (ProductAttributeValueInterface $attributeValue): array {
                 return [
-                    'Attribute' => $attributeValue->getAttribute()->getCode(),
+                    'Attribute' => $this->getPossibleResourceCodeValue($attributeValue->getAttribute()),
                     'Locale' => $attributeValue->getLocaleCode(),
                     'Value' => $attributeValue->getValue(),
                 ];
             }, $resource->getAttributes()->toArray()));
 
-            $this->addDataForResource($resource, 'Options', array_map(function (ProductOptionInterface $productOption): string {
-                return $productOption->getCode();
+            $this->addDataForResource($resource, 'Options', array_map(function (ProductOptionInterface $productOption): ?string {
+                return $this->getPossibleResourceCodeValue($productOption);
             }, $resource->getOptions()->toArray()));
 
             $this->addDataForResource($resource, 'Variants', array_map(function (ProductVariantInterface $productVariant): array {
@@ -108,17 +108,22 @@ final class ProductResourcePlugin extends ResourcePlugin
                     'Depth' => $productVariant->getDepth(),
                     'Weight' => $productVariant->getWeight(),
                     'ShippingRequired' => $productVariant->isShippingRequired(),
-                    'TaxCategory' => $productVariant->getTaxCategory() ? $productVariant->getTaxCategory()->getCode() : null,
-                    'ShippingCategory' => $productVariant->getShippingCategory() ? $productVariant->getShippingCategory()->getCode() : null,
-                    'Images' => array_map(function (ProductImageInterface $productImage): string {
+                    'TaxCategory' => $this->getPossibleResourceCodeValue($productVariant->getTaxCategory()),
+                    'ShippingCategory' => $this->getPossibleResourceCodeValue($productVariant->getShippingCategory()),
+                    'Images' => array_map(function (ProductImageInterface $productImage): ?string {
                         return $productImage->getPath();
                     }, $productVariant->getImages()->toArray()),
                     'Translations' => $translations,
-                    'Options' => array_map(function (ProductOptionValueInterface $productOptionValue): string {
-                        return $productOptionValue->getCode();
+                    'Options' => array_map(function (ProductOptionValueInterface $productOptionValue): ?string {
+                        return $this->getPossibleResourceCodeValue($productOptionValue);
                     }, $productVariant->getOptionValues()->toArray()),
                 ];
             }, $resource->getVariants()->toArray()));
         }
+    }
+
+    private function getPossibleResourceCodeValue(?CodeAwareInterface $codeAware): ?string
+    {
+        return null !== $codeAware ? $codeAware->getCode() : null;
     }
 }
