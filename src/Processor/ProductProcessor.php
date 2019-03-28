@@ -250,7 +250,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $productVariant = $this->productVariantRepository->findOneBy(['code' => $code]);
 
         if ($productVariant === null) {
-            /** @var ProductInterface $product */
+            /** @var ProductVariantInterface $productVariant */
             $productVariant = $this->productVariantFactory->createNew();
             $productVariant->setCode($code);
         }
