@@ -18,7 +18,7 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
   {
     "CreatedAt": "2019-03-28 12:14:00",
     "UpdatedAt":"2019-03-28 12:14:00",
-    "CheckoutCompletedAt": "2019-03-28",
+    "CheckoutCompletedAt": "2019-03-28 12:14:00",
     "CheckoutState": "completed",
     "Shipments": [
       {
@@ -72,6 +72,8 @@ final class OrderJsonImportExportTest extends AbstractJsonImportExportTest
             "UpdatedAt":"2019-03-28 12:14:00",
             "Total": 18,
             "Shipment": {
+              "CreatedAt": "2019-03-28 12:14:00",
+              "UpdatedAt":"2019-03-28 12:14:00",
               "State": "ready",
               "Method": "ups",
               "Tracking": null,
@@ -516,6 +518,37 @@ LOL;
     {
         parent::setUp();
 
+        $this->loadJsonFixtures('locale', <<<LOL
+[
+    {
+        "Code": "pl_PL"
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('currency', <<<LOL
+[
+    {
+        "Code": "PLN"
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('zone', <<<LOL
+[
+    {
+        "Code": "NA",
+        "Name": "North America",
+        "Type": "country",
+        "Scope": "all",
+        "Members": ["US", "CA"]
+    }
+]
+LOL
+        );
+
         $this->loadJsonFixtures('channel', <<<LOL
 [
     {
@@ -565,7 +598,7 @@ LOL
                 "Description": "Necessitatibus nemo et nihil inventore."
             }
         },
-        "Zone": "PL",
+        "Zone": "NA",
         "TaxCategory": "clothing",
         "Calculator": "flat_rate",
         "Enabled": true
@@ -588,6 +621,156 @@ LOL
                 "Bar": "Foo"
             }
         }
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('product_association_type', <<<LOL
+[
+    {
+        "Code": "similar_products",
+        "Translations": {
+            "en_US": {
+                "Name": "Similar products"
+            }
+        }
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('product_attribute', <<<LOL
+[
+    {
+        "Code": "t_shirt_brand",
+        "Type": "text",
+        "StorageType": "text",
+        "Configuration": [],
+        "Position": 0,
+        "Translations": {
+            "en_US": {
+                "Name": "T-Shirt Brand"
+            }
+        }
+    },
+    {
+        "Code": "t_shirt_collection",
+        "Type": "text",
+        "StorageType": "text",
+        "Configuration": [],
+        "Position": 1,
+        "Translations": {
+            "en_US": {
+                "Name": "T-Shirt Collection"
+            }
+        }
+    },
+    {
+        "Code": "book_author",
+        "Type": "text",
+        "StorageType": "text",
+        "Configuration": [],
+        "Position": 2,
+        "Translations": {
+            "en_US": {
+                "Name": "Book Author"
+            }
+        }
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('product_option', <<<LOL
+[
+    {
+        "Code": "t_shirt_color",
+        "Position": 0,
+        "Translations": {
+            "en_US": {
+                "Name": "T-Shirt Color"
+            }
+        },
+        "Values": [
+            {
+                "Code": "t_shirt_color_red",
+                "Translations": {
+                    "en_US": {
+                        "Value": "Red"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "Code": "t_shirt_size",
+        "Position": 0,
+        "Translations": {
+            "en_US": {
+                "Name": "T-Shirt Size"
+            }
+        },
+        "Values": [
+            {
+                "Code": "t_shirt_size_s",
+                "Translations": {
+                    "en_US": {
+                        "Value": "S"
+                    }
+                }
+            },
+            {
+                "Code": "t_shirt_size_m",
+                "Translations": {
+                    "en_US": {
+                        "Value": "M"
+                    }
+                }
+            }
+        ]
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('taxon', <<<LOL
+[
+    {
+        "Code": "t_shirts",
+        "Parent": "",
+        "Translations": {
+            "en_US": {
+                "Name": "T-Shirts",
+                "Slug": "tshirts",
+                "Description": "T-Shirts"
+            }
+        },
+        "Position": 0
+    },
+    {
+        "Code": "books",
+        "Parent": "",
+        "Translations": {
+            "en_US": {
+                "Name": "Books",
+                "Slug": "books",
+                "Description": "Books"
+            }
+        },
+        "Position": 1
+    },
+    {
+        "Code": "womens_t_shirts",
+        "Parent": "t_shirts",
+        "Translations": {
+            "en_US": {
+                "Name": "Women T-Shirts",
+                "Slug": "women-tshirts",
+                "Description": "Women T-Shirts"
+            }
+        },
+        "Position": 0
     }
 ]
 LOL
@@ -705,8 +888,8 @@ LOL
                     }
                 },
                 "Options": [
-                    "t_shirt_color_blue",
-                    "t_shirt_size_m"
+                    "t_shirt_color_red",
+                    "t_shirt_size_s"
                 ]
             },
             {
@@ -730,8 +913,8 @@ LOL
                     }
                 },
                 "Options": [
-                    "t_shirt_color_blue",
-                    "t_shirt_size_l"
+                    "t_shirt_color_red",
+                    "t_shirt_size_s"
                 ]
             },
             {
@@ -756,7 +939,7 @@ LOL
                 },
                 "Options": [
                     "t_shirt_color_red",
-                    "t_shirt_size_xl"
+                    "t_shirt_size_m"
                 ]
             },
             {
@@ -780,8 +963,8 @@ LOL
                     }
                 },
                 "Options": [
-                    "t_shirt_color_blue",
-                    "t_shirt_size_xxl"
+                    "t_shirt_color_red",
+                    "t_shirt_size_s"
                 ]
             }
         ]

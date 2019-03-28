@@ -64,7 +64,7 @@ services:
             - "@sylius.importer.metadata_validator"
             - "%sylius.order_fields%"
 
-    sylius.importer.locales.json:
+    sylius.importer.orders.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
             - "@sylius.manager.order"
@@ -74,4 +74,4 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: orders, format: json }
+            - { name: sylius.importer, type: order, format: json }

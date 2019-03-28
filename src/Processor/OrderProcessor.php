@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatterInterface;
 use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;
-use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\Customer;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -26,6 +25,7 @@ use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Model\AdjustableInterface;
 use Sylius\Component\Order\Model\Adjustment;
+use Sylius\Component\Order\Model\AdjustmentInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
@@ -101,9 +101,9 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var CustomerInterface $customer */
         $customer = $this->getCustomer($data['Customer']);
 
-        $order->setCreatedAt($this->dateTimeFormatter->toDateTime($data['CreatedAt']));
-        $order->setUpdatedAt($this->dateTimeFormatter->toDateTime($data['UpdatedAt']));
-        $order->setCheckoutCompletedAt($this->dateTimeFormatter->toDateTime($data['CheckoutCompletedAt']));
+        $order->setCreatedAt($this->getDateTimeFromString($data['CreatedAt']));
+        $order->setUpdatedAt($this->getDateTimeFromString($data['UpdatedAt']));
+        $order->setCheckoutCompletedAt($this->getDateTimeFromString($data['CheckoutCompletedAt']));
 
         $order->setCurrencyCode($data['CurrencyCode']);
         $order->setLocaleCode($data['LocaleCode']);
@@ -161,7 +161,7 @@ final class OrderProcessor implements ResourceProcessorInterface
 
         $customer->setEmail($parameters['Email']);
         $customer->setEmailCanonical($parameters['EmailCanonical']);
-        $customer->setBirthday($this->dateTimeFormatter->toDateTime($parameters['Birthday']));
+        $customer->setBirthday($this->getDateTimeFromString($parameters['Birthday']));
         $customer->setFirstName($parameters['FirstName']);
         $customer->setLastName($parameters['LastName']);
         $customer->setGender($parameters['Gender']);
@@ -170,7 +170,9 @@ final class OrderProcessor implements ResourceProcessorInterface
 
         $this->manager->persist($customer);
 
-        $customer->setDefaultAddress($this->getAddress($parameters['DefaultAddress'], $customer));
+        if ($parameters['DefaultAddress'] !== []) {
+            $customer->setDefaultAddress($this->getAddress($parameters['DefaultAddress'], $customer));
+        }
 
         return $customer;
     }
@@ -216,26 +218,22 @@ final class OrderProcessor implements ResourceProcessorInterface
             $orderItem->setImmutable($orderItemParameters['Immutable']);
             $orderItem->setUnitPrice($orderItemParameters['UnitPrice']);
 
-            foreach ($orderItemParameters['Units'] as $orderItemUnit) {
+            foreach ($orderItemParameters['Units'] as $orderItemUnitParameters) {
                 $orderItemUnit = new OrderItemUnit($orderItem);
-                $orderItemUnit->setCreatedAt($this->dateTimeFormatter->toDateTime($orderItemUnit['CreatedAt']));
-                $orderItemUnit->setUpdatedAt($this->dateTimeFormatter->toDateTime($orderItemUnit['UpdatedAt']));
-                $orderItemUnit->setShipment($this->getShipment($orderItemUnit['Shipment'], $order));
+                $orderItemUnit->setCreatedAt($this->getDateTimeFromString($orderItemUnitParameters['CreatedAt']));
+                $orderItemUnit->setUpdatedAt($this->getDateTimeFromString($orderItemUnitParameters['UpdatedAt']));
+                $orderItemUnit->setShipment($this->getShipment($orderItemUnitParameters['Shipment'], $order));
 
-                foreach ($orderItemUnit['Adjustments'] as $adjustment) {
+                foreach ($orderItemUnitParameters['Adjustments'] as $adjustment) {
                     $orderItemUnit->addAdjustment($this->getAdjustment($adjustment, $orderItemUnit));
                 }
-
-                $orderItem->addUnit($orderItemUnit);
             }
 
-            foreach ($orderItemsParameters['Adjustments'] as $adjustment) {
+            foreach ($orderItemParameters['Adjustments'] as $adjustment) {
                 $orderItem->addAdjustment($this->getAdjustment($adjustment, $orderItem));
             }
 
             $orderItem->setVariant($this->getProductVariant($orderItemParameters['Variant']));
-
-            $order->addItem($orderItem);
         }
     }
 
@@ -244,8 +242,8 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var AdjustmentInterface $adjustment */
         $adjustment = new Adjustment();
 
-        $adjustment->setCreatedAt($this->dateTimeFormatter->toDateTime($parameters['CreatedAt']));
-        $adjustment->setUpdatedAt($this->dateTimeFormatter->toDateTime($parameters['UpdatedAt']));
+        $adjustment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
+        $adjustment->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
         $adjustment->setAmount($parameters['Amount']);
         $adjustment->setLabel($parameters['Label']);
         $adjustment->setType($parameters['Type']);
@@ -263,11 +261,11 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var ShipmentInterface $shipment */
         $shipment = new Shipment();
 
-        $shipment->setCreatedAt($this->dateTimeFormatter->toDateTime($parameters['CreatedAt']));
-        $shipment->setUpdatedAt($this->dateTimeFormatter->toDateTime($parameters['UpdatedAt']));
+        $shipment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
+        $shipment->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
         $shipment->setState($parameters['State']);
         $shipment->setTracking($parameters['Tracking']);
-        $shipment->setMethod($this->getShippingMethod($parameters['ShippingMethod']));
+        $shipment->setMethod($this->getShippingMethod($parameters['Method']));
         $shipment->setOrder($order);
 
         $this->manager->persist($shipment);
@@ -281,8 +279,8 @@ final class OrderProcessor implements ResourceProcessorInterface
         $payment = new Payment();
         $payment->setOrder($order);
 
-        $payment->setCreatedAt($this->dateTimeFormatter->toDateTime($parameters['CreatedAt']));
-        $payment->setUpdatedAt($this->dateTimeFormatter->toDateTime($parameters['UpdatedAt']));
+        $payment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
+        $payment->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
         $payment->setMethod($this->getPaymentMethod($parameters['PaymentMethod']));
         $payment->setState($parameters['State']);
         $payment->setAmount($parameters['Amount']);
@@ -316,5 +314,10 @@ final class OrderProcessor implements ResourceProcessorInterface
         $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
 
         return $paymentMethod;
+    }
+
+    private function getDateTimeFromString(?string $dateTimeAsString): ?\DateTimeInterface
+    {
+        return null !== $dateTimeAsString ? $this->dateTimeFormatter->toDateTime($dateTimeAsString) : null;
     }
 }

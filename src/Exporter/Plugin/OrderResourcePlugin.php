@@ -75,6 +75,7 @@ final class OrderResourcePlugin extends ResourcePlugin
             }
 
             $this->addDataForResource($resource, 'Channel', $this->getPossibleResourceCodeValue($resource->getChannel()));
+            $this->addDataForResource($resource, 'CheckoutCompletedAt', $this->getFormattedDateTime($resource->getCheckoutCompletedAt()));
             $this->addDataForResource(
                 $resource,
                 'CreatedAt',
