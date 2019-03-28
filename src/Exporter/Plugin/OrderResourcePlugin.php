@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatterInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -13,15 +15,28 @@ use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PromotionCouponInterface;
-use Sylius\Component\Core\Model\PromotionInterface;
 use Sylius\Component\Order\Model\AdjustableInterface;
-use Sylius\Component\Promotion\Model\PromotionActionInterface;
-use Sylius\Component\Promotion\Model\PromotionRuleInterface;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class OrderResourcePlugin extends ResourcePlugin
 {
+    /** @var DateTimeFormatterInterface */
+    private $dateTimeFormatter;
+
+    public function __construct(
+        RepositoryInterface $repository,
+        PropertyAccessorInterface $propertyAccessor,
+        EntityManagerInterface $entityManager,
+        DateTimeFormatterInterface $dateTimeFormatter
+    ) {
+        parent::__construct($repository, $propertyAccessor, $entityManager);
+
+        $this->dateTimeFormatter = $dateTimeFormatter;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,10 +48,6 @@ final class OrderResourcePlugin extends ResourcePlugin
         foreach ($this->resources as $resource) {
             if (!$resource->getItems()->isEmpty()) {
                 $this->addOrderItems($resource);
-            }
-
-            if (!$resource->getPromotions()->isEmpty()) {
-                $this->addPromotions($resource);
             }
 
             if (!$resource->getPayments()->isEmpty()) {
@@ -63,11 +74,17 @@ final class OrderResourcePlugin extends ResourcePlugin
                 $this->addShippingAddress($resource);
             }
 
-            if (null !== $resource->getPromotionCoupon()) {
-                $this->addPromotionCoupon($resource);
-            }
-
             $this->addDataForResource($resource, 'Channel', $this->getPossibleResourceCodeValue($resource->getChannel()));
+            $this->addDataForResource(
+                $resource,
+                'CreatedAt',
+                null !== $resource->getCreatedAt() ? $this->dateTimeFormatter->toString($resource->getCreatedAt()) : null
+            );
+            $this->addDataForResource(
+                $resource,
+                'UpdatedAt',
+                null !== $resource->getUpdatedAt() ? $this->dateTimeFormatter->toString($resource->getUpdatedAt()) : null
+            );
         }
     }
 
@@ -103,6 +120,8 @@ final class OrderResourcePlugin extends ResourcePlugin
 
         foreach ($orderItemUnits as $orderItemUnit) {
             $orderItemUnitsToExport[] = [
+                'CreatedAt' => $this->getFormattedDateTime($orderItemUnit->getCreatedAt()),
+                'UpdatedAt' => $this->getFormattedDateTime($orderItemUnit->getUpdatedAt()),
                 'Total' => $orderItemUnit->getTotal(),
                 'Shipment' => $this->getShipmentAsArray($orderItemUnit->getShipment()),
                 'Adjustments' => $this->getAdjustments($orderItemUnit),
@@ -121,6 +140,8 @@ final class OrderResourcePlugin extends ResourcePlugin
 
         foreach ($adjustments as $adjustment) {
             $adjustmentsToExport[] = [
+                'CreatedAt' => $this->getFormattedDateTime($adjustment->getCreatedAt()),
+                'UpdatedAt' => $this->getFormattedDateTime($adjustment->getUpdatedAt()),
                 'Type' => $adjustment->getType(),
                 'Label' => $adjustment->getLabel(),
                 'Amount' => $adjustment->getAmount(),
@@ -138,89 +159,13 @@ final class OrderResourcePlugin extends ResourcePlugin
     private function getShipmentAsArray(ShipmentInterface $shipment): array
     {
         return [
+            'CreatedAt' => $this->getFormattedDateTime($shipment->getCreatedAt()),
+            'UpdatedAt' => $this->getFormattedDateTime($shipment->getUpdatedAt()),
             'State' => $shipment->getState(),
             'Method' => $this->getPossibleResourceCodeValue($shipment->getMethod()),
             'Tracking' => $shipment->getTracking(),
             'Tracked' => $shipment->isTracked(),
         ];
-    }
-
-    private function addPromotions(OrderInterface $order): void
-    {
-        $promotionsToExport = [];
-
-        /** @var Collection|PromotionInterface[] $adjustments */
-        $promotions = $order->getPromotions();
-
-        foreach ($promotions as $promotion) {
-            $promotionsToExport[] = [
-                'Name' => $promotion->getName(),
-                'Description' => $promotion->getDescription(),
-                'Priority' => $promotion->getPriority(),
-                'Exclusive' => $promotion->isExclusive(),
-                'UsageLimit' => $promotion->getUsageLimit(),
-                'Used' => $promotion->getUsed(),
-                'CouponBased' => $promotion->isCouponBased(),
-                'Coupons' => $this->getPromotionCoupons($promotion),
-                'Rules' => $this->getPromotionRules($promotion),
-                'Actions' => $this->getPromotionActions($promotion),
-            ];
-        }
-
-        $this->addDataForResource($order, 'Promotions', $promotionsToExport);
-    }
-
-    private function getPromotionCoupons(PromotionInterface $promotion): array
-    {
-        $promotionCouponsToExport = [];
-
-        /** @var Collection|PromotionCouponInterface[] $adjustments */
-        $promotionCoupons = $promotion->getCoupons();
-
-        foreach ($promotionCoupons as $promotionCoupon) {
-            $promotionCouponsToExport[] = [
-                'UsageLimit' => $promotionCoupon->getUsageLimit(),
-                'Used' => $promotionCoupon->getUsed(),
-                'ExpiresAt' => null !== $promotionCoupon->getExpiresAt() ? $promotionCoupon->getExpiresAt()->format('Y-m-d H:i:s') : null,
-                'Valid' => $promotionCoupon->isValid(),
-            ];
-        }
-
-        return $promotionCouponsToExport;
-    }
-
-    private function getPromotionRules(PromotionInterface $promotion): array
-    {
-        $promotionRulesToExport = [];
-
-        /** @var Collection|PromotionRuleInterface[] $adjustments */
-        $promotionRules = $promotion->getRules();
-
-        foreach ($promotionRules as $promotionRule) {
-            $promotionRulesToExport[] = [
-                'Type' => $promotionRule->getType(),
-                'Configuration' => $promotionRule->getConfiguration(),
-            ];
-        }
-
-        return $promotionRulesToExport;
-    }
-
-    private function getPromotionActions(PromotionInterface $promotion): array
-    {
-        $promotionActionsToExport = [];
-
-        /** @var Collection|PromotionActionInterface[] $adjustments */
-        $promotionActions = $promotion->getActions();
-
-        foreach ($promotionActions as $promotionAction) {
-            $promotionActionsToExport[] = [
-                'Type' => $promotionAction->getType(),
-                'Configuration' => $promotionAction->getConfiguration()
-            ];
-        }
-
-        return $promotionActionsToExport;
     }
 
     private function addPayments(OrderInterface $order): void
@@ -232,6 +177,8 @@ final class OrderResourcePlugin extends ResourcePlugin
 
         foreach ($payments as $payment) {
             $paymentsToExport[] = [
+                'CreatedAt' => $this->getFormattedDateTime($payment->getCreatedAt()),
+                'UpdatedAt' => $this->getFormattedDateTime($payment->getUpdatedAt()),
                 'PaymentMethod' => $this->getPossibleResourceCodeValue($payment->getMethod()),
                 'State' => $payment->getState(),
                 'CurrencyCode' => $payment->getCurrencyCode(),
@@ -263,11 +210,13 @@ final class OrderResourcePlugin extends ResourcePlugin
         $customer = $order->getCustomer();
 
         $customerToExport = [
+            'CreatedAt' => $this->getFormattedDateTime($customer->getCreatedAt()),
+            'UpdatedAt' => $this->getFormattedDateTime($customer->getUpdatedAt()),
             'Email' => $customer->getEmail(),
             'EmailCanonical' => $customer->getEmailCanonical(),
             'FirstName' => $customer->getFirstName(),
             'LastName' => $customer->getLastName(),
-            'Birthday' => null !== $customer->getBirthday() ? $customer->getBirthday()->format('Y-m-d H:i:s'): null,
+            'Birthday' => null !== $customer->getBirthday() ? $this->dateTimeFormatter->toString($customer->getBirthday()) : null,
             'Gender' => $customer->getGender(),
             'Group' => null !== $customer->getGroup() ? $customer->getGroup()->getName() : null,
             'PhoneNumber' => $customer->getPhoneNumber(),
@@ -331,12 +280,21 @@ final class OrderResourcePlugin extends ResourcePlugin
         $promotionCoupon = $order->getPromotionCoupon();
 
         $promotionCouponToExport = [
+            'CreatedAt' => $this->getFormattedDateTime($promotionCoupon->getCreatedAt()),
+            'UpdatedAt' => $this->getFormattedDateTime($promotionCoupon->getUpdatedAt()),
+            'ExpiresAt' => $this->getFormattedDateTime($promotionCoupon->getExpiresAt()),
             'UsageLimit' => $promotionCoupon->getUsageLimit(),
             'Used' => $promotionCoupon->getUsed(),
-            'ExpiresAt' => null !== $promotionCoupon->getExpiresAt() ? $promotionCoupon->getExpiresAt()->format('Y-m-d H:i:s') : null,
+            'PerCustomerUsageLimit' => $promotionCoupon->getPerCustomerUsageLimit(),
+            'Promotion' => $this->getPossibleResourceCodeValue($promotionCoupon->getPromotion()),
         ];
 
         $this->addDataForResource($order, 'PromotionCoupon', $promotionCouponToExport);
+    }
+
+    private function getFormattedDateTime(?\DateTimeInterface $dateTime): ?string
+    {
+        return null !== $dateTime ? $this->dateTimeFormatter->toString($dateTime) : null;
     }
 
     private function getPossibleResourceCodeValue(?CodeAwareInterface $codeAware): ?string

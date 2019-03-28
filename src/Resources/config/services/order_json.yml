@@ -1,7 +1,8 @@
 parameters:
     sylius.order_fields:
+        - "CreatedAt"
+        - "UpdatedAt"
         - "CheckoutCompletedAt"
-        - "IsCheckoutCompleted"
         - "CheckoutState"
         - "Shipments"
         - "ShippingRequired"
@@ -20,8 +21,6 @@ parameters:
         - "PaymentState"
         - "CurrencyCode"
         - "LocaleCode"
-        - "Promotions"
-        - "PromotionCoupon"
         - "TokenValue"
         - "CustomerIp"
         - "Channel"
@@ -48,3 +47,31 @@ services:
             - "@sylius.repository.order"
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
+            - '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
+
+    sylius.processor.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\OrderProcessor
+        arguments:
+            - "@sylius.factory.order"
+            - "@sylius.repository.order"
+            - "@sylius.repository.payment_method"
+            - "@sylius.repository.shipping_method"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.product"
+            - "@sylius.repository.product_variant"
+            - "@doctrine.orm.entity_manager"
+            - '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.order_fields%"
+
+    sylius.importer.locales.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.order"
+            - "@sylius.processor.orders"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: orders, format: json }
