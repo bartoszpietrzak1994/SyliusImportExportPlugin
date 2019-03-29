@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
@@ -96,6 +97,16 @@ final class ProductResourcePlugin extends ResourcePlugin
                     ];
                 }
 
+                $channelPricings = [];
+
+                /** @var ChannelPricingInterface $channelPricing */
+                foreach ($productVariant->getChannelPricings() as $channelPricing) {
+                    $channelPricings[$channelPricing->getChannelCode()] = [
+                        'Price' => $channelPricing->getPrice(),
+                        'OriginalPrice' => $channelPricing->getOriginalPrice(),
+                    ];
+                }
+
                 return [
                     'Code' => $productVariant->getCode(),
                     'Position' => $productVariant->getPosition(),
@@ -114,6 +125,7 @@ final class ProductResourcePlugin extends ResourcePlugin
                         return $productImage->getPath();
                     }, $productVariant->getImages()->toArray()),
                     'Translations' => $translations,
+                    'ChannelPricings' => $channelPricings,
                     'Options' => array_map(function (ProductOptionValueInterface $productOptionValue): ?string {
                         return $this->getPossibleResourceCodeValue($productOptionValue);
                     }, $productVariant->getOptionValues()->toArray()),
