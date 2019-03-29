@@ -51,18 +51,11 @@ services:
 
     sylius.processor.orders:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\OrderProcessor
+        autowire: true
         arguments:
-            - "@sylius.factory.order"
-            - "@sylius.repository.order"
-            - "@sylius.repository.payment_method"
-            - "@sylius.repository.shipping_method"
-            - "@sylius.repository.channel"
-            - "@sylius.repository.product"
-            - "@sylius.repository.product_variant"
-            - "@doctrine.orm.entity_manager"
-            - '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
-            - "@sylius.importer.metadata_validator"
-            - "%sylius.order_fields%"
+            $dateTimeFormatter: '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
+            $metadataValidator: "@sylius.importer.metadata_validator"
+            $headerKeys: "%sylius.order_fields%"
 
     sylius.importer.orders.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
