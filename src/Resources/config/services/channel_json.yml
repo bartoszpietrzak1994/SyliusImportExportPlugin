@@ -6,6 +6,8 @@ parameters:
         - "Hostname"
         - "Color"
         - "Enabled"
+        - "Currencies"
+        - "Locales"
         - "BaseCurrency"
         - "DefaultLocale"
         - "DefaultTaxZone"

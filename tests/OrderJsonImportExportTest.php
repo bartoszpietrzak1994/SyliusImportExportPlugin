@@ -551,6 +551,8 @@ LOL
         "Hostname": "localhost",
         "Color": "GreenYellow",
         "Enabled": true,
+        "Currencies": ["USD"],
+        "Locales": ["en_US"],
         "BaseCurrency": "USD",
         "DefaultLocale": "en_US",
         "DefaultTaxZone": "NA",
