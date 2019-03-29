@@ -89,7 +89,8 @@ final class BackendSynchroniser
         foreach ($this->productImageRepository->findAll() as $image) {
             $this->externalStorageFilesystem->write(
                 sprintf('%s/images/%s', $namespace, $image->getPath()),
-                $this->imageFilesystem->read($image->getPath())
+                $this->imageFilesystem->read($image->getPath()),
+                true
             );
         }
 
@@ -97,7 +98,8 @@ final class BackendSynchroniser
         foreach ($this->taxonImageRepository->findAll() as $image) {
             $this->externalStorageFilesystem->write(
                 sprintf('%s/images/%s', $namespace, $image->getPath()),
-                $this->imageFilesystem->read($image->getPath())
+                $this->imageFilesystem->read($image->getPath()),
+                true
             );
         }
     }
@@ -120,7 +122,8 @@ final class BackendSynchroniser
         foreach ($this->productImageRepository->findAll() as $image) {
             $this->imageFilesystem->write(
                 $image->getPath(),
-                $this->externalStorageFilesystem->read(sprintf('%s/images/%s', $namespace, $image->getPath()))
+                $this->externalStorageFilesystem->read(sprintf('%s/images/%s', $namespace, $image->getPath())),
+                true
             );
         }
 
@@ -128,7 +131,8 @@ final class BackendSynchroniser
         foreach ($this->taxonImageRepository->findAll() as $image) {
             $this->imageFilesystem->write(
                 $image->getPath(),
-                $this->externalStorageFilesystem->read(sprintf('%s/images/%s', $namespace, $image->getPath()))
+                $this->externalStorageFilesystem->read(sprintf('%s/images/%s', $namespace, $image->getPath())),
+                true
             );
         }
     }
