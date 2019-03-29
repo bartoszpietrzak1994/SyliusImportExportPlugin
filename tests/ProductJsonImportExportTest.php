@@ -301,6 +301,8 @@ LOL
         "Hostname": "localhost",
         "Color": "GreenYellow",
         "Enabled": true,
+        "Currencies": ["PLN"],
+        "Locales": ["pl_PL"],
         "BaseCurrency": "PLN",
         "DefaultLocale": "pl_PL",
         "DefaultTaxZone": "NA",

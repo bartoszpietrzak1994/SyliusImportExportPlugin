@@ -80,6 +80,14 @@ final class ChannelProcessor implements ResourceProcessorInterface
 
         $channel->setShopBillingData($this->getShopBillingData($data['ShopBillingData']));
 
+        foreach ($data['Locales'] as $localeCode) {
+            $channel->addLocale($this->getLocale($localeCode));
+        }
+
+        foreach ($data['Currencies'] as $currencyCode) {
+            $channel->addCurrency($this->getCurrency($currencyCode));
+        }
+
         $channel->setBaseCurrency($this->getCurrency($data['BaseCurrency']));
         $channel->setDefaultLocale($this->getLocale($data['DefaultLocale']));
         $channel->setDefaultTaxZone($this->getZone($data['DefaultTaxZone']));

@@ -36,6 +36,14 @@ final class ChannelResourcePlugin extends ResourcePlugin
             if (null !== $resource->getDefaultTaxZone()) {
                 $this->addDefaultTaxZone($resource);
             }
+
+            $this->addDataForResource($resource, 'Locales', array_map(function (LocaleInterface $locale): ?string {
+                return $locale->getCode();
+            }, $resource->getLocales()->toArray()));
+
+            $this->addDataForResource($resource, 'Currencies', array_map(function (CurrencyInterface $currency): ?string {
+                return $currency->getCode();
+            }, $resource->getCurrencies()->toArray()));
         }
     }
 

@@ -56,12 +56,14 @@ LOL
         return <<<LOL
 [
     {
-        "Code": "US_WEB",
+        "Code": "US_WEB1",
         "Name": "US Web Store",
         "Description": "sample_description",
         "Hostname": "localhost",
         "Color": "GreenYellow",
         "Enabled": true,
+        "Currencies": ["PLN", "USD"],
+        "Locales": ["pl_PL", "en_US"],
         "BaseCurrency": "PLN",
         "DefaultLocale": "pl_PL",
         "DefaultTaxZone": "NA",
@@ -81,14 +83,16 @@ LOL
         }
     },
     {
-        "Code": "en_US",
+        "Code": "US_WEB2",
         "Name": "US Web Store",
         "Description": "sample_description",
         "Hostname": "localhost",
         "Color": "GreenYellow",
-        "Enabled": true,
-        "BaseCurrency": "PLN",
-        "DefaultLocale": "pl_PL",
+        "Enabled": false,
+        "Currencies": ["USD"],
+        "Locales": ["en_US"],
+        "BaseCurrency": "USD",
+        "DefaultLocale": "en_US",
         "DefaultTaxZone": "NA",
         "TaxCalculationStrategy": "order_items_based",
         "ThemeName": "default",
