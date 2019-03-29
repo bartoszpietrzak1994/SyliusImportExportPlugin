@@ -58,6 +58,9 @@ final class BackendSynchroniser
     /** @var RepositoryInterface */
     private $taxonImageRepository;
 
+    /** @var RepositoryInterface */
+    private $orderRepository;
+
     public function __construct(
         GaufretteFilesystem $externalStorageFilesystem,
         Exporter $exporter,
@@ -65,7 +68,8 @@ final class BackendSynchroniser
         EntityManagerInterface $entityManager,
         GaufretteFilesystem $imageFilesystem,
         RepositoryInterface $productImageRepository,
-        RepositoryInterface $taxonImageRepository
+        RepositoryInterface $taxonImageRepository,
+        RepositoryInterface $orderRepository
     ) {
         $this->externalStorageFilesystem = $externalStorageFilesystem;
         $this->temporaryFilesystem = new SymfonyFilesystem();
@@ -75,6 +79,7 @@ final class BackendSynchroniser
         $this->imageFilesystem = $imageFilesystem;
         $this->productImageRepository = $productImageRepository;
         $this->taxonImageRepository = $taxonImageRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     public function export(string $namespace): void
@@ -106,7 +111,11 @@ final class BackendSynchroniser
 
     public function import(string $namespace): void
     {
-        (new ORMPurger($this->entityManager))->purge();
+        if (count($this->orderRepository->findAll()) !== 0) {
+            throw new \DomainException('Please export all orders before importing data from the backend.');
+        }
+
+        (new ORMPurger($this->entityManager, ['sylius_admin_user']))->purge();
 
         foreach (self::JOBS as $job) {
             $temporaryPath = $this->temporaryFilesystem->tempnam(md5(self::class), sprintf('%s/%s', $namespace, $job));
