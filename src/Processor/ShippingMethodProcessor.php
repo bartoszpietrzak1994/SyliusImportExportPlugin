@@ -29,6 +29,9 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
     /** @var RepositoryInterface */
     private $taxCategoryRepository;
 
+    /** @var RepositoryInterface */
+    private $channelRepository;
+
     /** @var ObjectManager */
     private $manager;
 
@@ -44,6 +47,7 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         RepositoryInterface $zoneRepository,
         RepositoryInterface $categoryRepository,
         RepositoryInterface $taxCategoryRepository,
+        RepositoryInterface $channelRepository,
         ObjectManager $manager,
         MetadataValidatorInterface $metadataValidator,
         array $headerKeys
@@ -53,6 +57,7 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         $this->zoneRepository = $zoneRepository;
         $this->categoryRepository = $categoryRepository;
         $this->taxCategoryRepository = $taxCategoryRepository;
+        $this->channelRepository = $channelRepository;
         $this->manager = $manager;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
@@ -72,6 +77,10 @@ final class ShippingMethodProcessor implements ResourceProcessorInterface
         $shippingMethod->setPosition($data['Position']);
         $shippingMethod->setCategoryRequirement($data['CategoryRequirement']);
         $shippingMethod->setTaxCategory($this->findTaxCategory($data['TaxCategory']));
+
+        foreach ($data['Channels'] as $channelCode) {
+            $shippingMethod->addChannel($this->channelRepository->findOneBy(['code' => $channelCode]));
+        }
 
         foreach ($data['Translations'] as $locale => $translation) {
             $shippingMethod->setCurrentLocale($locale);

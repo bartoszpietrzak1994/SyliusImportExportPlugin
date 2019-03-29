@@ -1,5 +1,5 @@
 parameters:
-    sylius.payment_methods_fields: ["Code", "Environment", "Enabled", "Position", "GatewayConfig"]
+    sylius.payment_methods_fields: ["Code", "Environment", "Enabled", "Position", "GatewayConfig", "Channels"]
 
 services:
     sylius.exporter.payment_methods.json:
@@ -30,6 +30,7 @@ services:
             - "@sylius.factory.payment_method"
             - "@sylius.repository.payment_method"
             - "@sylius.manager.payment_method"
+            - "@sylius.repository.channel"
             - "@sylius.factory.gateway_config"
             - "@sylius.importer.metadata_validator"
             - "%sylius.payment_methods_fields%"

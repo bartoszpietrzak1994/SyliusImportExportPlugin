@@ -1,5 +1,5 @@
 parameters:
-    sylius.shipping_method_fields: ["Code", "Calculator", "Position", "Category", "CategoryRequirement", "Configuration", "Translations", "Zone", "TaxCategory", "Enabled"]
+    sylius.shipping_method_fields: ["Code", "Calculator", "Position", "Category", "CategoryRequirement", "Configuration", "Translations", "Zone", "TaxCategory", "Enabled", "Channels"]
 
 services:
     sylius.exporter.plugin.resource.shipping_methods:
@@ -32,6 +32,7 @@ services:
             - "@sylius.repository.zone"
             - "@sylius.repository.shipping_category"
             - "@sylius.repository.tax_category"
+            - "@sylius.repository.channel"
             - "@sylius.manager.shipping_method"
             - "@sylius.importer.metadata_validator"
             - "%sylius.shipping_method_fields%"

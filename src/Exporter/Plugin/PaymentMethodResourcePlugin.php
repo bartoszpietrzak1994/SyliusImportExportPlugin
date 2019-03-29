@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 final class PaymentMethodResourcePlugin extends ResourcePlugin
@@ -24,6 +25,10 @@ final class PaymentMethodResourcePlugin extends ResourcePlugin
                     'Config' => $resource->getGatewayConfig()->getConfig(),
                 ]);
             }
+
+            $this->addDataForResource($resource, 'Channels', array_map(function (ChannelInterface $channel): ?string {
+                return $channel->getCode();
+            }, $resource->getChannels()->toArray()));
         }
     }
 }
