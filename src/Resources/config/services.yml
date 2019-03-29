@@ -174,5 +174,13 @@ services:
             - "@sylius.repository.product_image"
             - "@sylius.repository.taxon_image"
 
+    FriendsOfSylius\SyliusImportExportPlugin\Synchronisation\OrderSynchroniser:
+        arguments:
+            - "@gaufrette.friends_of_sylius_import_export_filesystem"
+            - "@FriendsOfSylius\\SyliusImportExportPlugin\\Synchronisation\\Exporter"
+            - "@FriendsOfSylius\\SyliusImportExportPlugin\\Synchronisation\\Importer"
+            - "@sylius.repository.order"
+            - "@sylius.manager.order"
+
     FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter:
         public: true

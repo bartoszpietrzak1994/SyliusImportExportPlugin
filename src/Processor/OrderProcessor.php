@@ -15,6 +15,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItem;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\OrderItemUnit;
+use Sylius\Component\Core\Model\OrderItemUnitInterface;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
@@ -22,7 +23,9 @@ use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\Shipment;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
+use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Order\Factory\OrderItemUnitFactoryInterface;
 use Sylius\Component\Order\Model\AdjustableInterface;
 use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Order\Model\AdjustmentInterface;
@@ -33,6 +36,27 @@ final class OrderProcessor implements ResourceProcessorInterface
 {
     /** @var FactoryInterface */
     private $orderFactory;
+
+    /** @var FactoryInterface */
+    private $customerFactory;
+
+    /** @var FactoryInterface */
+    private $addressFactory;
+
+    /** @var FactoryInterface */
+    private $orderItemFactory;
+
+    /** @var OrderItemUnitFactoryInterface */
+    private $orderItemUnitFactory;
+
+    /** @var FactoryInterface */
+    private $adjustmentFactory;
+
+    /** @var FactoryInterface */
+    private $shipmentFactory;
+
+    /** @var FactoryInterface */
+    private $paymentFactory;
 
     /** @var OrderRepositoryInterface */
     private $orderRepository;
@@ -46,8 +70,8 @@ final class OrderProcessor implements ResourceProcessorInterface
     /** @var RepositoryInterface */
     private $channelRepository;
 
-    /** @var RepositoryInterface */
-    private $productRepository;
+    /** @var CustomerRepositoryInterface */
+    private $customerRepository;
 
     /** @var RepositoryInterface */
     private $productVariantRepository;
@@ -66,11 +90,18 @@ final class OrderProcessor implements ResourceProcessorInterface
 
     public function __construct(
         FactoryInterface $orderFactory,
+        FactoryInterface $customerFactory,
+        FactoryInterface $addressFactory,
+        FactoryInterface $orderItemFactory,
+        OrderItemUnitFactoryInterface $orderItemUnitFactory,
+        FactoryInterface $adjustmentFactory,
+        FactoryInterface $shipmentFactory,
+        FactoryInterface $paymentFactory,
         OrderRepositoryInterface $orderRepository,
         RepositoryInterface $paymentMethodRepository,
         RepositoryInterface $shippingMethodRepository,
         RepositoryInterface $channelRepository,
-        RepositoryInterface $productRepository,
+        CustomerRepositoryInterface $customerRepository,
         RepositoryInterface $productVariantRepository,
         ObjectManager $manager,
         DateTimeFormatterInterface $dateTimeFormatter,
@@ -78,11 +109,18 @@ final class OrderProcessor implements ResourceProcessorInterface
         array $headerKeys
     ) {
         $this->orderFactory = $orderFactory;
+        $this->customerFactory = $customerFactory;
+        $this->addressFactory = $addressFactory;
+        $this->orderItemFactory = $orderItemFactory;
+        $this->orderItemUnitFactory = $orderItemUnitFactory;
+        $this->adjustmentFactory = $adjustmentFactory;
+        $this->shipmentFactory = $shipmentFactory;
+        $this->paymentFactory = $paymentFactory;
         $this->orderRepository = $orderRepository;
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->shippingMethodRepository = $shippingMethodRepository;
         $this->channelRepository = $channelRepository;
-        $this->productRepository = $productRepository;
+        $this->customerRepository = $customerRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->manager = $manager;
         $this->dateTimeFormatter = $dateTimeFormatter;
@@ -155,13 +193,18 @@ final class OrderProcessor implements ResourceProcessorInterface
 
     private function getCustomer(array $parameters): CustomerInterface
     {
-        /** @var CustomerInterface $customer */
-        $customer = new Customer();
+        /** @var CustomerInterface|null $customer */
+        $customer = $this->customerRepository->findOneBy(['emailCanonical' => $parameters['EmailCanonical']]);
+
+        if ($customer === null) {
+            /** @var CustomerInterface $customer */
+            $customer = $this->customerFactory->createNew();
+            $customer->setEmailCanonical($parameters['EmailCanonical']);
+        }
 
         $customer->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
         $customer->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
         $customer->setEmail($parameters['Email']);
-        $customer->setEmailCanonical($parameters['EmailCanonical']);
         $customer->setBirthday($this->getDateTimeFromString($parameters['Birthday']));
         $customer->setFirstName($parameters['FirstName']);
         $customer->setLastName($parameters['LastName']);
@@ -181,7 +224,7 @@ final class OrderProcessor implements ResourceProcessorInterface
     private function getAddress(array $parameters, CustomerInterface $customer): AddressInterface
     {
         /** @var AddressInterface $address */
-        $address = new Address();
+        $address = $this->addressFactory->createNew();
 
         $address->setPhoneNumber($parameters['PhoneNumber']);
         $address->setFirstName($parameters['FirstName']);
@@ -213,14 +256,15 @@ final class OrderProcessor implements ResourceProcessorInterface
         /** @var array $orderItemParameters */
         foreach ($orderItemsParameters as $orderItemParameters) {
             /** @var OrderItemInterface $orderItem */
-            $orderItem = new OrderItem();
+            $orderItem = $this->orderItemFactory->createNew();
             $orderItem->setOrder($order);
 
             $orderItem->setImmutable($orderItemParameters['Immutable']);
             $orderItem->setUnitPrice($orderItemParameters['UnitPrice']);
 
             foreach ($orderItemParameters['Units'] as $orderItemUnitParameters) {
-                $orderItemUnit = new OrderItemUnit($orderItem);
+                /** @var OrderItemUnitInterface $orderItemUnit */
+                $orderItemUnit = $this->orderItemUnitFactory->createForItem($orderItem);
                 $orderItemUnit->setCreatedAt($this->getDateTimeFromString($orderItemUnitParameters['CreatedAt']));
                 $orderItemUnit->setUpdatedAt($this->getDateTimeFromString($orderItemUnitParameters['UpdatedAt']));
                 $orderItemUnit->setShipment($this->getShipment($orderItemUnitParameters['Shipment'], $order));
@@ -241,7 +285,7 @@ final class OrderProcessor implements ResourceProcessorInterface
     private function getAdjustment(array $parameters, AdjustableInterface $adjustable): AdjustmentInterface
     {
         /** @var AdjustmentInterface $adjustment */
-        $adjustment = new Adjustment();
+        $adjustment = $this->adjustmentFactory->createNew();
 
         $adjustment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
         $adjustment->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
@@ -260,7 +304,7 @@ final class OrderProcessor implements ResourceProcessorInterface
     private function getShipment(array $parameters, OrderInterface $order): ShipmentInterface
     {
         /** @var ShipmentInterface $shipment */
-        $shipment = new Shipment();
+        $shipment = $this->shipmentFactory->createNew();
 
         $shipment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
         $shipment->setUpdatedAt($this->getDateTimeFromString($parameters['UpdatedAt']));
@@ -277,7 +321,7 @@ final class OrderProcessor implements ResourceProcessorInterface
     private function getPayment(array $parameters, OrderInterface $order): PaymentInterface
     {
         /** @var PaymentInterface $payment */
-        $payment = new Payment();
+        $payment = $this->paymentFactory->createNew();
         $payment->setOrder($order);
 
         $payment->setCreatedAt($this->getDateTimeFromString($parameters['CreatedAt']));
