@@ -1,0 +1,77 @@
+parameters:
+    sylius.order_fields:
+        - "CreatedAt"
+        - "UpdatedAt"
+        - "CheckoutCompletedAt"
+        - "CheckoutState"
+        - "Shipments"
+        - "ShippingRequired"
+        - "ShippingState"
+        - "ShippingAddress"
+        - "BillingAddress"
+        - "Number"
+        - "Notes"
+        - "Items"
+        - "ItemsTotal"
+        - "Total"
+        - "State"
+        - "Adjustments"
+        - "Customer"
+        - "Payments"
+        - "PaymentState"
+        - "CurrencyCode"
+        - "LocaleCode"
+        - "TokenValue"
+        - "CustomerIp"
+        - "Channel"
+
+services:
+    sylius.exporter.orders.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.orders"
+            - "%sylius.order_fields%"
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.order, format: json }
+
+    sylius.exporter.pluginpool.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.orders"]
+            - "%sylius.order_fields%"
+
+    sylius.exporter.plugin.resource.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\OrderResourcePlugin
+        arguments:
+            - "@sylius.repository.order"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+            - '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
+
+    sylius.processor.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\OrderProcessor
+        arguments:
+            - "@sylius.factory.order"
+            - "@sylius.repository.order"
+            - "@sylius.repository.payment_method"
+            - "@sylius.repository.shipping_method"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.product"
+            - "@sylius.repository.product_variant"
+            - "@doctrine.orm.entity_manager"
+            - '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
+            - "@sylius.importer.metadata_validator"
+            - "%sylius.order_fields%"
+
+    sylius.importer.orders.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.manager.order"
+            - "@sylius.processor.orders"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: order, format: json }
