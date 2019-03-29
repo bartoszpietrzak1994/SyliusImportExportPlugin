@@ -99,6 +99,13 @@ final class ProductJsonImportExportTest extends AbstractJsonImportExportTest
                         "Name": "distinctio"
                     }
                 },
+                "ChannelPricings": {
+                    "US_WEB": {
+                        "Price": 675,
+                        "OriginalPrice": null,
+                        "PriceReduced": false
+                    }
+                },
                 "Options": [
                     "t_shirt_color_red",
                     "t_shirt_size_s"
@@ -122,6 +129,13 @@ final class ProductJsonImportExportTest extends AbstractJsonImportExportTest
                 "Translations": {
                     "en_US": {
                         "Name": "dolor"
+                    }
+                },
+                "ChannelPricings": {
+                    "US_WEB": {
+                        "Price": 675,
+                        "OriginalPrice": null,
+                        "PriceReduced": false
                     }
                 },
                 "Options": [
@@ -201,6 +215,13 @@ final class ProductJsonImportExportTest extends AbstractJsonImportExportTest
                 "Translations": {
                     "en_US": {
                         "Name": "totam"
+                    }
+                },
+                "ChannelPricings": {
+                    "US_WEB": {
+                        "Price": 675,
+                        "OriginalPrice": null,
+                        "PriceReduced": false
                     }
                 },
                 "Options": []

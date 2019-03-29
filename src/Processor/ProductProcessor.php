@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
@@ -40,6 +41,9 @@ final class ProductProcessor implements ResourceProcessorInterface
 
     /** @var FactoryInterface */
     private $productAssociationFactory;
+
+    /** @var FactoryInterface */
+    private $channelPricingFactory;
 
     /** @var FactoryInterface */
     private $productAttributeValueFactory;
@@ -87,6 +91,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         FactoryInterface $productImageFactory,
         FactoryInterface $productAssociationFactory,
         FactoryInterface $productAttributeValueFactory,
+        FactoryInterface $channelPricingFactory,
         RepositoryInterface $productAttributeRepository,
         RepositoryInterface $productOptionRepository,
         FactoryInterface $productVariantFactory,
@@ -107,6 +112,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productImageFactory = $productImageFactory;
         $this->productAssociationFactory = $productAssociationFactory;
         $this->productAttributeValueFactory = $productAttributeValueFactory;
+        $this->channelPricingFactory = $channelPricingFactory;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->productOptionRepository = $productOptionRepository;
         $this->productVariantFactory = $productVariantFactory;
@@ -216,6 +222,16 @@ final class ProductProcessor implements ResourceProcessorInterface
                 $productVariant->setCurrentLocale($localeCode);
 
                 $productVariant->setName($translation['Name']);
+            }
+
+            foreach ($variantData['ChannelPricings'] as $channelCode => $channelPricingData) {
+                /** @var ChannelPricingInterface $channelPricing */
+                $channelPricing = $this->channelPricingFactory->createNew();
+                $channelPricing->setChannelCode($channelCode);
+                $channelPricing->setPrice($channelPricingData['Price']);
+                $channelPricing->setOriginalPrice($channelPricingData['OriginalPrice']);
+
+                $productVariant->addChannelPricing($channelPricing);
             }
 
             foreach ($variantData['Options'] as $optionValueCode) {
