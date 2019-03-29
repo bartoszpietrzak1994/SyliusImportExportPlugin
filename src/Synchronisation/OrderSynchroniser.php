@@ -44,12 +44,12 @@ final class OrderSynchroniser
         $this->orderManager = $orderManager;
     }
 
-    public function export(): void
+    public function export(string $namespace): void
     {
         $data = ($this->exporter)('order');
 
         $this->externalStorageFilesystem->write(
-            sprintf('orders/%s.json', md5(uniqid('', true))),
+            sprintf('%s/orders-%s.json', $namespace, md5(uniqid('', true))),
             (string) json_encode($data),
             true
         );
@@ -60,9 +60,9 @@ final class OrderSynchroniser
         $this->orderManager->flush();
     }
 
-    public function import(): void
+    public function import(string $namespace): void
     {
-        foreach ($this->externalStorageFilesystem->listKeys('orders/')['keys'] as $file) {
+        foreach ($this->externalStorageFilesystem->listKeys(sprintf('%s/orders-', $namespace))['keys'] as $file) {
             $temporaryPath = $this->temporaryFilesystem->tempnam(md5(self::class . $file), 'order.json');
 
             file_put_contents($temporaryPath, $this->externalStorageFilesystem->read($file));
