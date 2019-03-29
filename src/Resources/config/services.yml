@@ -173,6 +173,7 @@ services:
             - "@gaufrette.sylius_image_filesystem"
             - "@sylius.repository.product_image"
             - "@sylius.repository.taxon_image"
+            - "@sylius.repository.order"
 
     FriendsOfSylius\SyliusImportExportPlugin\Synchronisation\OrderSynchroniser:
         arguments:
