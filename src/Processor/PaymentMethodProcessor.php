@@ -21,6 +21,9 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     /** @var ObjectManager */
     private $manager;
 
+    /** @var RepositoryInterface */
+    private $channelRepository;
+
     /** @var FactoryInterface */
     private $gatewayConfigFactory;
 
@@ -37,6 +40,7 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         FactoryInterface $factory,
         RepositoryInterface $repository,
         ObjectManager $manager,
+        RepositoryInterface $channelRepository,
         FactoryInterface $gatewayFactory,
         MetadataValidatorInterface $metadataValidator,
         array $headerKeys
@@ -44,6 +48,7 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         $this->factory = $factory;
         $this->repository = $repository;
         $this->manager = $manager;
+        $this->channelRepository = $channelRepository;
         $this->gatewayConfigFactory = $gatewayFactory;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
@@ -66,6 +71,10 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         $gatewayConfig->setConfig($data['GatewayConfig']['Config']);
 
         $paymentMethod->setGatewayConfig($gatewayConfig);
+
+        foreach ($data['Channels'] as $channelCode) {
+            $paymentMethod->addChannel($this->channelRepository->findOneBy(['code' => $channelCode]));
+        }
     }
 
     private function getPaymentMethod(string $code): PaymentMethodInterface

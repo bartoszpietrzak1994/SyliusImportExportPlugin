@@ -596,7 +596,8 @@ LOL
         "Zone": "NA",
         "TaxCategory": "clothing",
         "Calculator": "flat_rate",
-        "Enabled": true
+        "Enabled": true,
+        "Channels": ["US_WEB"]
     }
 ]
 LOL
@@ -615,7 +616,8 @@ LOL
             "Config": {
                 "Bar": "Foo"
             }
-        }
+        },
+        "Channels": ["US_WEB"]
     }
 ]
 LOL

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Shipping\Model\ShippingMethodTranslationInterface;
 
@@ -40,6 +41,10 @@ final class ShippingMethodResourcePlugin extends ResourcePlugin
             }
 
             $this->addDataForResource($resource, 'Translations', $translations);
+
+            $this->addDataForResource($resource, 'Channels', array_map(function (ChannelInterface $channel): ?string {
+                return $channel->getCode();
+            }, $resource->getChannels()->toArray()));
         }
     }
 }

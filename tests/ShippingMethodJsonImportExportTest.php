@@ -6,56 +6,6 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin;
 
 final class ShippingMethodJsonImportExportTest extends AbstractJsonImportExportTest
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->loadJsonFixtures('shipping_category', <<<LOL
-[
-    {
-        "Code": "LIGHT",
-        "Name": "Light",
-        "Description": "Light products."
-    },
-    {
-        "Code": "HEAVY",
-        "Name": "Heavy",
-        "Description": "Heavy products."
-    }
-]
-LOL
-        );
-        $this->loadJsonFixtures('tax_category', <<<LOL
-[
-    {
-        "Code": "clothing",
-        "Name": "Clothing",
-        "Description": "Corrupti dolorem ut qui et voluptatem. Repellendus sint omnis exercitationem ut. Quas soluta omnis quae tenetur consequatur voluptate."
-    }
-]
-LOL
-        );
-        $this->loadJsonFixtures('zone', <<<LOL
-[
-    {
-        "Code": "NA",
-        "Name": "North America",
-        "Type": "country",
-        "Scope": "all",
-        "Members": ["US", "CA"]
-    },
-    {
-        "Code": "PL",
-        "Name": "Poland: Silesian & Masovian Voivodeships",
-        "Type": "province",
-        "Scope": "all",
-        "Members": ["PL_SL", "PL_MA"]
-    }
-]
-LOL
-        );
-    }
-
     protected function provideName(): string
     {
         return "shipping_method";
@@ -84,7 +34,8 @@ LOL
         "Zone": "PL",
         "TaxCategory": "clothing",
         "Calculator": "flat_rate",
-        "Enabled": true
+        "Enabled": true,
+        "Channels": ["US_WEB"]
     },
     {
         "Code": "dhl_express",
@@ -105,30 +56,113 @@ LOL
         "Zone": "NA",
         "TaxCategory": "clothing",
         "Calculator": "flat_rate",
-        "Enabled": false
-    },
-    {
-        "Code": "fedex",
-        "Position": 2,
-        "Category": "LIGHT",
-        "CategoryRequirement": 1,
-        "Configuration": {
-            "US_WEB": {
-                "amount": 6228
-            }
-        },
-        "Translations": {
-            "en_US": {
-                "Name": "FedEx",
-                "Description": "Impedit rerum omnis maxime iusto rerum quod exercitationem."
-            }
-        },
-        "Zone": "PL",
-        "TaxCategory": "clothing",
-        "Calculator": "flat_rate",
-        "Enabled": false
+        "Enabled": false,
+        "Channels": []
     }
 ]
 LOL;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loadJsonFixtures('shipping_category', <<<LOL
+[
+    {
+        "Code": "LIGHT",
+        "Name": "Light",
+        "Description": "Light products."
+    },
+    {
+        "Code": "HEAVY",
+        "Name": "Heavy",
+        "Description": "Heavy products."
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('tax_category', <<<LOL
+[
+    {
+        "Code": "clothing",
+        "Name": "Clothing",
+        "Description": "Corrupti dolorem ut qui et voluptatem. Repellendus sint omnis exercitationem ut. Quas soluta omnis quae tenetur consequatur voluptate."
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('currency', <<<LOL
+[
+    {
+        "Code": "USD"
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('locale', <<<LOL
+[
+    {
+        "Code": "en_US"
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('zone', <<<LOL
+[
+    {
+        "Code": "NA",
+        "Name": "North America",
+        "Type": "country",
+        "Scope": "all",
+        "Members": ["US", "CA"]
+    },
+    {
+        "Code": "PL",
+        "Name": "Poland: Silesian & Masovian Voivodeships",
+        "Type": "province",
+        "Scope": "all",
+        "Members": ["PL_SL", "PL_MA"]
+    }
+]
+LOL
+        );
+
+        $this->loadJsonFixtures('channel', <<<LOL
+[
+    {
+        "Code": "US_WEB",
+        "Name": "US Web Store",
+        "Description": "sample_description",
+        "Hostname": "localhost",
+        "Color": "GreenYellow",
+        "Enabled": true,
+        "Currencies": ["USD"],
+        "Locales": ["en_US"],
+        "BaseCurrency": "USD",
+        "DefaultLocale": "en_US",
+        "DefaultTaxZone": "NA",
+        "TaxCalculationStrategy": "order_items_based",
+        "ThemeName": "default",
+        "ContactEmail": "sylius@example.com",
+        "SkippingShippingStepAllowed": false,
+        "SkippingPaymentStepAllowed": false,
+        "AccountVerificationRequired": true,
+        "ShopBillingData" : {
+            "City": "sample_city",
+            "Street": "sample_street",
+            "Country": "sample_country",
+            "TaxId": "sample_tax_id",
+            "Company": "sample_company",
+            "Postcode": "11-111"
+        }
+    }
+]
+LOL
+        );
     }
 }
