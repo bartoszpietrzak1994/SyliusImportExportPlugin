@@ -6,28 +6,21 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatterInterface;
-use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
-use Sylius\Component\Core\Model\Customer;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\OrderItem;
 use Sylius\Component\Core\Model\OrderItemInterface;
-use Sylius\Component\Core\Model\OrderItemUnit;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
-use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Sylius\Component\Core\Model\Shipment;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Factory\OrderItemUnitFactoryInterface;
 use Sylius\Component\Order\Model\AdjustableInterface;
-use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Order\Model\AdjustmentInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -85,6 +78,9 @@ final class OrderProcessor implements ResourceProcessorInterface
     /** @var MetadataValidatorInterface */
     private $metadataValidator;
 
+    /** @var array */
+    private $orderStatesApplicableToImport;
+
     /** @var string[] */
     private $headerKeys;
 
@@ -106,6 +102,7 @@ final class OrderProcessor implements ResourceProcessorInterface
         ObjectManager $manager,
         DateTimeFormatterInterface $dateTimeFormatter,
         MetadataValidatorInterface $metadataValidator,
+        array $orderStatesApplicableToImport,
         array $headerKeys
     ) {
         $this->orderFactory = $orderFactory;
@@ -125,11 +122,16 @@ final class OrderProcessor implements ResourceProcessorInterface
         $this->manager = $manager;
         $this->dateTimeFormatter = $dateTimeFormatter;
         $this->metadataValidator = $metadataValidator;
+        $this->orderStatesApplicableToImport = $orderStatesApplicableToImport;
         $this->headerKeys = $headerKeys;
     }
 
     public function process(array $data): void
     {
+        if (!in_array($data['State'], $this->orderStatesApplicableToImport)) {
+            return;
+        }
+
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
         /** @var OrderInterface $order */

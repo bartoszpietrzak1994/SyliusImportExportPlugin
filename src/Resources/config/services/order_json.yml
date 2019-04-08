@@ -24,6 +24,9 @@ parameters:
         - "TokenValue"
         - "CustomerIp"
         - "Channel"
+    sylius.order_states_applicable_to_import:
+        - "new"
+        - "fulfilled"
 
 services:
     sylius.exporter.orders.json:
@@ -55,6 +58,7 @@ services:
         arguments:
             $dateTimeFormatter: '@FriendsOfSylius\SyliusImportExportPlugin\Formatter\DateTimeFormatter'
             $metadataValidator: "@sylius.importer.metadata_validator"
+            $orderStatesApplicableToImport: "%sylius.order_states_applicable_to_import%"
             $headerKeys: "%sylius.order_fields%"
 
     sylius.importer.orders.json:
