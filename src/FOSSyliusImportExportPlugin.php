@@ -21,8 +21,6 @@ final class FOSSyliusImportExportPlugin extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new RegisterImporterPass());
-        $container->addCompilerPass(new RegisterExporterPass());
         $container->addCompilerPass(new MessageQueuePass());
     }
 }
