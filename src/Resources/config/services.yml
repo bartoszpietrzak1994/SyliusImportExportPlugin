@@ -2,24 +2,6 @@ imports:
     - 'services/*.yml'
 
 services:
-    # Controllers for Admin-Integration
-    sylius.controller.import_data:
-        public: true
-        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
-        arguments:
-            - "@sylius.importers_registry"
-            - "@session"
-            - "@form.factory"
-            - "@twig"
-
-    sylius.controller.export_data:
-        public: true
-        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
-        arguments:
-            - "@sylius.exporters_registry"
-            - "@sylius.resource_controller.request_configuration_factory"
-            - "@sylius.resource_controller.resources_collection_provider"
-
     # Form Type
     sylius.form.type.import:
         public: true
